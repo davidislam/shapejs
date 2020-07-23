@@ -11,12 +11,14 @@ class Shape {
     this.circles = [];
   }
 
+  /* Creates and returns a new rectangle instance */
   makeRectangle(options) {
     const newRect = new Rectangle(options, this.context);
     this.rectangles.push(newRect);
     return newRect;
   }
 
+  /* Creates and returns a new circle instance */
   makeCircle(options) {
     const newCircle = new Circle(options, this.context);
     this.circles.push(newCircle);
@@ -26,6 +28,48 @@ class Shape {
   fitCanvasToScreen() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
+  }
+
+  /* Generates n circles randomly positioned on the canvas
+  with randomly chosen colours of fixed radius */
+  generateRandomCircles(options) {
+    for (let i = 0; i < options.n; i++) {
+      const x = Math.random() * this.canvas.width;
+      const y = Math.random() * this.canvas.height;
+      const colour = randomColour();
+      const circle = new Circle({
+        x,
+        y,
+        colour,
+        radius: options.radius,
+        filled: options.filled
+      },
+        this.context);
+      circle.draw();
+      this.circles.push(circle);
+    }
+  }
+
+  /* Generates n random rectangles */
+  generateRandomRectangles(options) {
+    for (let i = 0; i < options.n; i++) {
+      const x = Math.random() * this.canvas.width;
+      const y = Math.random() * this.canvas.height;
+      const width = Math.random() * options.maxWidth;
+      const height = Math.random() * options.maxHeight;
+      const colour = randomColour();
+      const rect = new Rectangle({
+        x,
+        y,
+        width,
+        height,
+        colour,
+        filled: options.filled
+      },
+        this.context)
+      rect.draw();
+      this.rectangles.push(rect);
+    }
   }
 }
 
@@ -79,7 +123,7 @@ class Circle extends _Shape {
   outline() {
     this.ctx.strokeStyle = this.colour;
     this.drawCircle();
-    // TODO: stroke circle
+    this.ctx.stroke();
   }
 }
 
@@ -103,6 +147,7 @@ class Rectangle extends _Shape {
 
 }
 
+const randomColour = () => `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${Math.random()})`;
 
 function degToRad(degrees) {
   return degrees * Math.PI / 180;
