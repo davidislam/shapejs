@@ -14,22 +14,22 @@ log("examples.js");
 // circleInstance.draw();
 
 
-/* Draw random shapes */
-const randCircleShapeInstance = new Shape("random-circle-canvas");
-randCircleShapeInstance.fitCanvasToScreen();
-randCircleShapeInstance.generateRandomCircles({
-  n: 50,
-  radius: 50,
-  filled: true
-})
-const randRectShapeInstance = new Shape("random-rectangle-canvas");
-randRectShapeInstance.fitCanvasToScreen();
-randRectShapeInstance.generateRandomRectangles({
-  n: 50,
-  maxWidth: 200,
-  maxHeight: 200,
-  filled: true
-})
+// /* Draw random shapes */
+// const randCircleShapeInstance = new Shape("random-circle-canvas");
+// randCircleShapeInstance.fitCanvasToScreen();
+// randCircleShapeInstance.generateRandomCircles({
+//   n: 50,
+//   radius: 50,
+//   filled: true
+// })
+// const randRectShapeInstance = new Shape("random-rectangle-canvas");
+// randRectShapeInstance.fitCanvasToScreen();
+// randRectShapeInstance.generateRandomRectangles({
+//   n: 50,
+//   maxWidth: 200,
+//   maxHeight: 200,
+//   filled: true
+// })
 
 /* Animate circle */
 // const animateCircleShapeInstance = new Shape("testing-canvas");
@@ -40,11 +40,26 @@ randRectShapeInstance.generateRandomRectangles({
 // animatedCircle.animate(3); // circle should be bouncing at a speed of 5 
 
 /* Animates every circle in the circle array */
-const animateManyCirclesShapeInstance = new Shape("testing-canvas");
-animateManyCirclesShapeInstance.fitCanvasToScreen();
-animateManyCirclesShapeInstance.generateRandomAnimatedCircles({
-  n: 25,
-  radius: 150,
-  filled: true,
-  speed: 1
+// const animateManyCirclesShapeInstance = new Shape("testing-canvas");
+// animateManyCirclesShapeInstance.fitCanvasToScreen();
+// animateManyCirclesShapeInstance.generateRandomAnimatedCircles({
+//   n: 25,
+//   radius: 50,
+//   filled: true,
+//   speed: 2,
+// })
+
+/* Interactivity */
+const interactiveCirclesShapeInstance = new Shape("testing-canvas");
+interactiveCirclesShapeInstance.fitCanvasToScreen();
+interactiveCirclesShapeInstance.generateInteractiveCircles({
+  n: 100,
+  radius: 100,
+  minRadius: 3,
+  animated: false,
+  speed: 1,
+  shrinkRate: 2,
+  growRate: 2,
+  range: 75,
+  colours: ["#BE5FD9", "#6064BF", "#3A4E8C", "#122640", "#5FA0D9"]
 })
