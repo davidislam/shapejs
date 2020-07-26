@@ -50,10 +50,14 @@ class Shape {
   //   }
   // }
 
-  createRandomCircles(options) {
-    const { n, radius, filled, speed, colours, shrinkRate, growRate, minRadius, interactive, animated } = options;
+  generateRandomCircles(options) {
+    this.createRandomCircles(options, true)
+  }
+
+  createRandomCircles(options, draw = false) {
+    const { n, radius, filled, speed, colours, shrinkRate, growRate, minRadius, interactive, animated, shrinkRadius } = options;
     for (let i = 0; i < n; i++) {
-      const circleRadius = Math.random() * radius + 1;
+      const circleRadius = Math.random() * (radius - minRadius) + minRadius;
       const x = animated ? Math.random() * (this.canvas.width - circleRadius * 2) + circleRadius : Math.random() * this.canvas.width;
       const y = animated ? Math.random() * (this.canvas.height - circleRadius * 2) + circleRadius : Math.random() * this.canvas.height;
       const randX = Math.random() - 0.5;
@@ -61,13 +65,16 @@ class Shape {
       const dx = randX < 0 ? Math.floor(randX) * speed : Math.ceil(randX) * speed;
       const dy = randY < 0 ? Math.floor(randY) * speed : Math.ceil(randY) * speed;
       const circleColour = colours === undefined ? randomColour() : colours[Math.floor(Math.random() * colours.length)];
-      this.makeCircle({ x, y, radius: circleRadius, filled, dx, dy, colour: circleColour, shrinkRate, growRate, minRadius, interactive, animated });
+      const newCircle = this.makeCircle({ x, y, radius: circleRadius, filled, dx, dy, colour: circleColour, shrinkRate, growRate, shrinkRadius, interactive, animated });
+      if (draw) {
+        newCircle.draw();
+      }
     }
   }
 
   /* Generates n random animated circles */
   generateRandomAnimatedCircles(options) {
-    this._createRandomAnimatedCircles(options);
+    this.createRandomCircles(options);
     this.animateCircles();
   }
 
@@ -91,7 +98,7 @@ class Shape {
 
   /* Generates random static or animated circles with interactivity */
   generateInteractiveCircles(options) {
-    const { n, animated, radius, speed, colours, range, shrinkRate, growRate, minRadius } = options;
+    const { n, animated, radius, speed, colours, range, shrinkRate, growRate, minRadius, shrinkRadius } = options;
     this.canvas.addEventListener("mousemove", e => {
       this.mouse.x = e.x;
       this.mouse.y = e.y;
@@ -103,7 +110,7 @@ class Shape {
     // } else {
     //   this.generateRandomCircles({ n, radius, filled: true, colours, shrinkRate, growRate, minRadius, interactive: true }, false);
     // }
-    this.createRandomCircles({ n, animated, radius, speed, colours, shrinkRate, growRate, minRadius, filled: true, interactive: true })
+    this.createRandomCircles({ n, animated, radius, speed, colours, shrinkRate, growRate, minRadius, shrinkRadius, filled: true, interactive: true })
     this.animateCircles();
   }
 
@@ -166,7 +173,7 @@ class Shape {
   animateRectangles() {
     requestAnimationFrame(this.animateRectangles.bind(this));
     this.clearCanvas();
-    this.rectangles.forEach(rect => rect.update(this.mouse.x, this.mouse.y, this.mouse.range));
+    this.rectangles.forEach(rect => rect.update(this.mouse.x, this.mouse.range));
   }
 }
 
@@ -204,7 +211,7 @@ class Circle extends _Shape {
     super(options, ctx, canvas);
     this.radius = options.radius || 50; // current radius
     this.originalRadius = options.radius || 50;
-    this.minRadius = options.minRadius || 5;
+    this.minRadius = options.shrinkRadius || 5;
     this.maxRadius = options.radius; // TODO: User should provide the max radius
     this.dx = options.dx || 1;
     this.dy = options.dy || 1;
@@ -266,10 +273,13 @@ class Circle extends _Shape {
 
   /* Makes this circle interactive to the cursor */
   _addInteractivity(mouse_x, mouse_y, range) {
-    if (Math.abs(mouse_x - this.x) < range && Math.abs(mouse_y - this.y) < range && this.radius > this.minRadius + this.shrinkRate) {
+    // Temporary adjustment 
+    const adj = (window.innerWidth - this.canvas.width) / 2
+    const adj2 = (window.innerHeight - this.canvas.height) / 2
+    if (Math.abs(mouse_x - this.x - adj) < range && Math.abs(mouse_y - this.y - adj2) < range && this.radius > this.minRadius + this.shrinkRate) {
       // Shrink circle
       this.radius -= this.shrinkRate;
-    } else if (Math.abs(mouse_x - this.x) >= range && Math.abs(mouse_y - this.y) >= range && this.radius < this.originalRadius) {
+    } else if (Math.abs(mouse_x - this.x - adj) >= range && Math.abs(mouse_y - this.y - adj2) >= range && this.radius < this.originalRadius) {
       // Grow circle back to its original size
       this.radius += this.growRate;
     } else if (this.radius > this.originalRadius) {
@@ -315,16 +325,14 @@ class Rectangle extends _Shape {
     this.ctx.strokeRect(this.x, this.y, this.width, this.height);
   }
 
-  update(mouse_x, mouse_y, range) {
-    // const ampRate = speed;
-    // Lesson: <mouse_y> is unneccessary
-    // && Math.abs(mouse_y - this.y) <= range
-    // || Math.abs(mouse_y - this.y) > range
-    if (Math.abs(mouse_x - this.x) <= range && this.height > this.minHeight) {
+  update(mouse_x, range) {
+    // Account for the different origin points in window and canvas (assuming browser is in full screen)
+    const adj = (window.innerWidth - this.canvas.width) / 2
+    if (Math.abs(mouse_x - this.x - adj) <= range && this.height > this.minHeight) {
       // Compress rectangle
       this.height -= this.ampRate;
       this.y += this.ampRate;
-    } else if (Math.abs(mouse_x - this.x) > range && this.height < this.originalHeight) {
+    } else if (Math.abs(mouse_x - this.x - adj) > range && this.height < this.originalHeight) {
       // Restore rectangle back to its original height
       this.height += this.ampRate;
       this.y -= this.ampRate;

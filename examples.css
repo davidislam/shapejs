@@ -3,6 +3,13 @@ body {
   margin: 0;
 }
 
-canvas {
-  border: 1px solid black;
+hr {
+  width: 65%;
+  margin-top: 30px;
 }
+
+/* canvas { */
+/* border: 1px solid black; */
+/* width: 1000px;
+  height: 500px; */
+/* } */
