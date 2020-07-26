@@ -15,8 +15,6 @@ class Shape {
     this.circles = [];
   }
 
-  // TODO: makeShape() factory method
-
   /* Creates and returns a new rectangle instance */
   makeRectangle(options) {
     const newRect = new Rectangle(options, this.context, this.canvas);
@@ -35,20 +33,6 @@ class Shape {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
   }
-
-  /* Generates n random static circles */
-  // generateRandomCircles(options, draw = true) {
-  //   const { n, colours, radius, filled, minRadius, shrinkRate, growRate, interactive } = options;
-  //   for (let i = 0; i < n; i++) {
-  //     const x = Math.random() * this.canvas.width;
-  //     const y = Math.random() * this.canvas.height;
-  //     const circleColour = colours === undefined ? randomColour() : colours[Math.floor(Math.random() * colours.length)];
-  //     const circle = this.makeCircle({ x, y, colour: circleColour, radius, filled, minRadius, shrinkRate, growRate, interactive, animated: false });
-  //     if (draw) {
-  //       circle.draw();
-  //     }
-  //   }
-  // }
 
   generateRandomCircles(options) {
     this.createRandomCircles(options, true)
@@ -78,24 +62,6 @@ class Shape {
     this.animateCircles();
   }
 
-  /* A helper method to create random *animated* circles */
-  // _createRandomAnimatedCircles(options) {
-  //   const { n, radius, filled, speed, colours, shrinkRate, growRate, minRadius, interactive } = options;
-  //   for (let i = 0; i < n; i++) {
-  //     const x = Math.random() * (this.canvas.width - radius * 2) + radius;
-  //     const y = Math.random() * (this.canvas.height - radius * 2) + radius;
-  //     const randX = Math.random() - 0.5;
-  //     const randY = Math.random() - 0.5;
-  //     const dx = randX < 0 ? Math.floor(randX) * speed : Math.ceil(randX) * speed;
-  //     const dy = randY < 0 ? Math.floor(randY) * speed : Math.ceil(randY) * speed;
-  //     const circleColour = colours === undefined ? randomColour() : colours[Math.floor(Math.random() * colours.length)];
-  //     const circleRadius = Math.random() * radius + 1;
-  //     this.makeCircle({ x, y, radius: circleRadius, filled, dx, dy, colour: circleColour, shrinkRate, growRate, minRadius, interactive, animated: true });
-  //   }
-  // }
-
-  // TODO: Add interactivity where the circles grow upon hover instead of shrinking
-
   /* Generates random static or animated circles with interactivity */
   generateInteractiveCircles(options) {
     const { n, animated, radius, speed, colours, range, shrinkRate, growRate, minRadius, shrinkRadius } = options;
@@ -104,12 +70,6 @@ class Shape {
       this.mouse.y = e.y;
     })
     this.mouse.range = range;
-
-    // if (animated) {
-    //   this._createRandomAnimatedCircles({ n, radius, filled: true, speed, colours, shrinkRate, growRate, minRadius, interactive: true });
-    // } else {
-    //   this.generateRandomCircles({ n, radius, filled: true, colours, shrinkRate, growRate, minRadius, interactive: true }, false);
-    // }
     this.createRandomCircles({ n, animated, radius, speed, colours, shrinkRate, growRate, minRadius, shrinkRadius, filled: true, interactive: true })
     this.animateCircles();
   }
@@ -159,8 +119,6 @@ class Shape {
   clearCanvas() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
-
-  // TODO: Animate Factory method
 
   /* Animates all the created circles in the circles array */
   animateCircles() {
@@ -212,7 +170,7 @@ class Circle extends _Shape {
     this.radius = options.radius || 50; // current radius
     this.originalRadius = options.radius || 50;
     this.minRadius = options.shrinkRadius || 5;
-    this.maxRadius = options.radius; // TODO: User should provide the max radius
+    this.maxRadius = options.radius;
     this.dx = options.dx || 1;
     this.dy = options.dy || 1;
     this.shrinkRate = options.shrinkRate || 1;
@@ -248,17 +206,8 @@ class Circle extends _Shape {
     this.draw();
   }
 
-  // update(animated, mouse_x, mouse_y, limit) {
-  //   if (animated) {
-  //     this._updatePosition();
-  //   }
-  //   this._addInteractivity(mouse_x, mouse_y, limit);
-  //   this.draw();
-  // }
-
   /* Updates the position of this circle, taking into account the boundaries */
   _updatePosition() {
-    // TODO: Sometimes circles get stuck to the edges
     // Check walls
     if (this.x + this.radius > this.canvas.width || this.x - this.radius < 0) {
       this.dx = -this.dx;

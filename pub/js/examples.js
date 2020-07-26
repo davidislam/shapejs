@@ -18,7 +18,7 @@ const circleInstance2 = shapeInstance.makeCircle({ x: 775, y: 200, radius: 150, 
 circleInstance2.draw();
 
 
-// /* Draw random shapes */
+/* Draw random shapes */
 const randCircleShapeInstance = new Shape("random-circle-canvas");
 randCircleShapeInstance.generateRandomCircles({
   n: 100,
@@ -37,7 +37,6 @@ randRectShapeInstance.generateRandomRectangles({
 
 /* Animate circle */
 const animateCircleShapeInstance = new Shape("animated-circle-canvas");
-// animateCircleShapeInstance.fitCanvasToScreen();
 const animatedCircle = animateCircleShapeInstance.makeCircle({
   x: 50, y: 50, radius: 25, filled: true, colour: "orange",
 });
