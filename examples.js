@@ -50,16 +50,29 @@ log("examples.js");
 // })
 
 /* Interactivity */
-const interactiveCirclesShapeInstance = new Shape("testing-canvas");
-interactiveCirclesShapeInstance.fitCanvasToScreen();
-interactiveCirclesShapeInstance.generateInteractiveCircles({
-  n: 100,
-  radius: 100,
-  minRadius: 3,
-  animated: false,
-  speed: 1,
-  shrinkRate: 2,
-  growRate: 2,
-  range: 75,
-  colours: ["#BE5FD9", "#6064BF", "#3A4E8C", "#122640", "#5FA0D9"]
-})
+// const interactiveCirclesShapeInstance = new Shape("testing-canvas");
+// interactiveCirclesShapeInstance.fitCanvasToScreen();
+// interactiveCirclesShapeInstance.generateInteractiveCircles({
+//   n: 100,
+//   radius: 100,
+//   minRadius: 3,
+//   animated: false,
+//   speed: 1,
+//   shrinkRate: 2,
+//   growRate: 2,
+//   range: 75,
+//   colours: ["#BE5FD9", "#6064BF", "#3A4E8C", "#122640", "#5FA0D9"]
+// })
+
+/* Rectangles Amplification */
+const interactiveRectanglesShapeInstance = new Shape("testing-canvas");
+interactiveRectanglesShapeInstance.fitCanvasToScreen();
+interactiveRectanglesShapeInstance.generateAmplifyingRectangles({
+  n: 30,
+  colours: ["#BE5FD9", "#6064BF", "#3A4E8C", "#122640", "#5FA0D9"],
+  minHeight: 250,
+  maxHeight: 500,
+  compressedHeight: 50,
+  range: 70,
+  speed: 25
+});

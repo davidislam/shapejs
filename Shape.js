@@ -123,11 +123,50 @@ class Shape {
     }
   }
 
+  /* Generates n random amplifying rectangles */
+  generateAmplifyingRectangles(options) {
+    this._createRectanglesFixedToBottom(options);
+    this.canvas.addEventListener("mousemove", e => {
+      this.mouse.x = e.x;
+      this.mouse.y = e.y;
+    })
+    this.mouse.range = options.range;
+    this.animateRectangles();
+  }
+
+  /* A helper method that creates random rectangles of the same width whose base is at the bottom of the canvas */
+  _createRectanglesFixedToBottom(options) {
+    const { n, colours, minHeight, maxHeight, compressedHeight, speed } = options;
+    const width = this.canvas.width / n;
+    const filled = true;
+    for (let i = 0; i < n; i++) {
+      const x = width * i;
+      const height = (Math.random() * (maxHeight - minHeight)) + minHeight;
+      const y = this.canvas.height - height;
+      const colour = colours[Math.floor(Math.random() * colours.length)];
+      const newRect = this.makeRectangle({ x, y, width, height, minHeight: compressedHeight, colour, filled, speed });
+    }
+  }
+
+  /* Clears the canvas */
+  clearCanvas() {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  // TODO: Animate Factory method
+
   /* Animates all the created circles in the circles array */
   animateCircles() {
     requestAnimationFrame(this.animateCircles.bind(this));
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.clearCanvas();
     this.circles.forEach(circle => circle.update({ mouse_x: this.mouse.x, mouse_y: this.mouse.y, range: this.mouse.range }));
+  }
+
+  /* Animates the rectangles in an amplifying way */
+  animateRectangles() {
+    requestAnimationFrame(this.animateRectangles.bind(this));
+    this.clearCanvas();
+    this.rectangles.forEach(rect => rect.update(this.mouse.x, this.mouse.y, this.mouse.range));
   }
 }
 
@@ -260,7 +299,10 @@ class Rectangle extends _Shape {
   constructor(options, ctx, canvas) {
     super(options, ctx, canvas);
     this.width = options.width || 100;
-    this.height = options.height || 100;
+    this.height = options.height || 100; // current height
+    this.originalHeight = options.height;
+    this.minHeight = options.minHeight || options.height;
+    this.ampRate = options.speed;
   }
 
   fill() {
@@ -273,9 +315,26 @@ class Rectangle extends _Shape {
     this.ctx.strokeRect(this.x, this.y, this.width, this.height);
   }
 
+  update(mouse_x, mouse_y, range) {
+    // const ampRate = speed;
+    // Lesson: <mouse_y> is unneccessary
+    // && Math.abs(mouse_y - this.y) <= range
+    // || Math.abs(mouse_y - this.y) > range
+    if (Math.abs(mouse_x - this.x) <= range && this.height > this.minHeight) {
+      // Compress rectangle
+      this.height -= this.ampRate;
+      this.y += this.ampRate;
+    } else if (Math.abs(mouse_x - this.x) > range && this.height < this.originalHeight) {
+      // Restore rectangle back to its original height
+      this.height += this.ampRate;
+      this.y -= this.ampRate;
+    }
+    this.draw();
+  }
+
 }
 
-/*** Helper functions ***/
+/** Helper functions **/
 
 // Returns a random RGBA colour
 const randomColour = () => `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${Math.random()})`;
