@@ -1,54 +1,91 @@
 'use strict';
 console.log("Shape.js");
 
-
 /* The main entry point to the library */
 class Shape {
-  constructor(element) {
-    this.canvas = document.querySelector(`#${element}`);
+
+  /* Constructs a new instance of this library on the canvas with id <canvasID>*/
+  constructor(canvasID) {
+    this.canvas = document.querySelector(`#${canvasID}`);
     this.context = this.canvas.getContext("2d");
 
-    // Used for interactivity
+    // Used for mouse interactivity
     this.mouse = { x: undefined, y: undefined, range: undefined };
 
     this.rectangles = [];
     this.circles = [];
+
+    // Globals
+    // Circle
+    this.MAX_RADIUS = 100;
+    this.MIN_RADIUS = 5;
+    this.SHRINK_RADIUS = 5;
+    this.SPEED = 1;
+    this.SHRINK_RATE = 3;
+    this.GROW_RATE = 3;
+
+    this.RANGE = 50;
+
+    // Rectangle
+    this.MAX_WIDTH = this.canvas.width;
+    this.MAX_HEIGHT = this.canvas.height;
+    this.MIN_HEIGHT = this.canvas.height * 0.10;
+    this.COMPRESSED_HEIGHT = this.canvas.height * 0.10;
+    this.AMP_SPEED = 25;
   }
 
-  /* Creates and returns a new rectangle instance */
+  /* Creates and returns a new rectangle instance given the parameters in <options>*/
   makeRectangle(options) {
     const newRect = new Rectangle(options, this.context, this.canvas);
     this.rectangles.push(newRect);
     return newRect;
   }
 
-  /* Creates and returns a new circle instance */
+  /* Creates and returns a new circle instance given the parameters in <options>*/
   makeCircle(options) {
     const newCircle = new Circle(options, this.context, this.canvas);
     this.circles.push(newCircle);
     return newCircle;
   }
 
+  /* Fits canvas to the screen */
   fitCanvasToScreen() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
   }
 
-  generateRandomCircles(options) {
-    this.createRandomCircles(options, true)
+  /* Generates random static circles given the parameters in <options> */
+  generateCircles(options) {
+    this._createRandomCircles(options, true);
   }
 
-  createRandomCircles(options, draw = false) {
-    const { n, radius, filled, speed, colours, shrinkRate, growRate, minRadius, interactive, animated, shrinkRadius } = options;
+  /* A helper function used to create random circles given some options, optionally drawing them
+  on the canvas. This can be used to create static, animated, or even interactive circles. */
+  _createRandomCircles(options, draw = false, animated = false, interactive = false) {
+    const { n, maxRadius, minRadius, shrinkRadius, filled, colours, speed, shrinkRate, growRate } = options;
+    // Set optional params
+    maxRadius = maxRadius === undefined ? this.MAX_RADIUS : maxRadius;
+    minRadius = minRadius === undefined ? this.MIN_RADIUS : minRadius;
+    shrinkRadius = shrinkRadius === undefined ? this.SHRINK_RADIUS : shrinkRadius;
+    filled = filled === undefined ? true : filled;
+    speed = speed === undefined ? this.SPEED : speed;
+    shrinkRate = shrinkRate === undefined ? this.SHRINK_RATE : shrinkRate;
+    growRate = growRate === undefined ? this.GROW_RATE : growRate;
+
     for (let i = 0; i < n; i++) {
-      const circleRadius = Math.random() * (radius - minRadius) + minRadius;
+      // Create <n> circles, randomizing some of their properties
+      const circleRadius = Math.random() * (maxRadius - minRadius) + minRadius; // minRadius <= circleRadius <= radius
+      // Circle's center (x,y)
       const x = animated ? Math.random() * (this.canvas.width - circleRadius * 2) + circleRadius : Math.random() * this.canvas.width;
       const y = animated ? Math.random() * (this.canvas.height - circleRadius * 2) + circleRadius : Math.random() * this.canvas.height;
+      // Circle's velocity
       const randX = Math.random() - 0.5;
       const randY = Math.random() - 0.5;
       const dx = randX < 0 ? Math.floor(randX) * speed : Math.ceil(randX) * speed;
       const dy = randY < 0 ? Math.floor(randY) * speed : Math.ceil(randY) * speed;
+      // Colour
       const circleColour = colours === undefined ? randomColour() : colours[Math.floor(Math.random() * colours.length)];
+      // Make new circle
       const newCircle = this.makeCircle({ x, y, radius: circleRadius, filled, dx, dy, colour: circleColour, shrinkRate, growRate, shrinkRadius, interactive, animated });
       if (draw) {
         newCircle.draw();
@@ -57,32 +94,41 @@ class Shape {
   }
 
   /* Generates n random animated circles */
-  generateRandomAnimatedCircles(options) {
-    this.createRandomCircles(options);
+  generateAnimatedCircles(options) {
+    this._createRandomCircles(options, false, true);
     this.animateCircles();
   }
 
   /* Generates random static or animated circles with interactivity */
   generateInteractiveCircles(options) {
-    const { n, animated, radius, speed, colours, range, shrinkRate, growRate, minRadius, shrinkRadius } = options;
-    this.canvas.addEventListener("mousemove", e => {
-      this.mouse.x = e.x;
-      this.mouse.y = e.y;
-    })
-    this.mouse.range = range;
-    this.createRandomCircles({ n, animated, radius, speed, colours, shrinkRate, growRate, minRadius, shrinkRadius, filled: true, interactive: true })
-    this.animateCircles();
+    const { animated, range } = options;
+    // Keep track of the mouse's position
+    this._addMouseMoveEventListener(range);
+    this._createRandomCircles(options, !animated, animated, true);
+    if (animated) {
+      this.animateCircles();
+    }
   }
 
   /* Generates n random static rectangles */
-  generateRandomRectangles(options, draw = true) {
-    const { n, filled, colour, maxWidth, maxHeight } = options;
+  generateRectangles(options) {
+    this._createRandomRectangles(options, true);
+  }
+
+  /* A helper function used to create random static rectangles given some options */
+  _createRandomRectangles(options, draw = false) {
+    const { n, filled, colours, maxWidth, maxHeight } = options;
+    // Set optional params
+    filled = filled === undefined ? true : filled;
+    maxWidth = maxWidth === undefined ? this.MAX_WIDTH : maxWidth;
+    maxHeight = maxHeight === undefined ? this.MAX_HEIGHT : maxHeight;
+
     for (let i = 0; i < n; i++) {
       const x = Math.random() * this.canvas.width;
       const y = Math.random() * this.canvas.height;
       const width = Math.random() * maxWidth;
       const height = Math.random() * maxHeight;
-      const rectColour = colour || randomColour();
+      const rectColour = colours === undefined ? randomColour() : colours[Math.floor(Math.random() * colours.length)];
       const rect = this.makeRectangle({ x, y, width, height, colour: rectColour, filled })
       if (draw) {
         rect.draw();
@@ -90,28 +136,41 @@ class Shape {
     }
   }
 
-  /* Generates n random amplifying rectangles */
-  generateAmplifyingRectangles(options) {
-    this._createRectanglesFixedToBottom(options);
+  /* A helper function used to add a 'mousemove' event to the canvas */
+  _addMouseMoveEventListener(range) {
     this.canvas.addEventListener("mousemove", e => {
       this.mouse.x = e.x;
       this.mouse.y = e.y;
     })
-    this.mouse.range = options.range;
+    this.mouse.range = range === undefined ? RANGE : range;
+  }
+
+  /* Generates n random amplifying rectangles */
+  generateAmplifyingRectangles(options) {
+    const { range } = options;
+    this._createRectanglesFixedToBottom(options);
+    this._addMouseMoveEventListener(range);
     this.animateRectangles();
   }
 
   /* A helper method that creates random rectangles of the same width whose base is at the bottom of the canvas */
   _createRectanglesFixedToBottom(options) {
     const { n, colours, minHeight, maxHeight, compressedHeight, speed } = options;
+    // Set optional params
+    minHeight = minHeight === undefined ? this.MIN_HEIGHT : minHeight;
+    maxHeight = maxHeight === undefined ? this.MAX_HEIGHT : maxHeight;
+    compressedHeight = compressedHeight === undefined ? this.COMPRESSED_HEIGHT : compressedHeight;
+    speed = speed === undefined ? this.AMP_SPEED : speed;
+
     const width = this.canvas.width / n;
     const filled = true;
+
     for (let i = 0; i < n; i++) {
       const x = width * i;
       const height = (Math.random() * (maxHeight - minHeight)) + minHeight;
       const y = this.canvas.height - height;
-      const colour = colours[Math.floor(Math.random() * colours.length)];
-      const newRect = this.makeRectangle({ x, y, width, height, minHeight: compressedHeight, colour, filled, speed });
+      const colour = colours === undefined ? randomColour() : colours[Math.floor(Math.random() * colours.length)];
+      this.makeRectangle({ x, y, width, height, minHeight: compressedHeight, colour, filled, speed });
     }
   }
 
@@ -120,7 +179,7 @@ class Shape {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  /* Animates all the created circles in the circles array */
+  /* Animates all circles in the circles array */
   animateCircles() {
     requestAnimationFrame(this.animateCircles.bind(this));
     this.clearCanvas();
