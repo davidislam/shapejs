@@ -8,6 +8,7 @@ class Shape {
   constructor(canvasID) {
     this.canvas = document.querySelector(`#${canvasID}`);
     this.context = this.canvas.getContext("2d");
+    this._rect = this.canvas.getBoundingClientRect();
 
     // Used for mouse interactivity
     this.mouse = { x: undefined, y: undefined, range: undefined };
@@ -139,8 +140,9 @@ class Shape {
   /* A helper function used to add a 'mousemove' event to the canvas */
   _addMouseMoveEventListener(range) {
     this.canvas.addEventListener("mousemove", e => {
-      this.mouse.x = e.x;
-      this.mouse.y = e.y;
+      // Get the coordinates relative to this canvas
+      this.mouse.x = e.x - this._rect.left;
+      this.mouse.y = e.y - this._rect.top;
     })
     this.mouse.range = range === undefined ? RANGE : range;
   }
@@ -202,11 +204,12 @@ class _Shape {
     this.colour = options.colour || "rgb(0,0,0)";
     this.x = options.x || 0;
     this.y = options.y || 0;
-    this.isFilled = options.filled;
-    this.animated = options.animated || false;
-    this.interactive = options.interactive || false;
+    this.isFilled = options.filled === undefined ? true : options.filled;
+    this.animated = options.animated === undefined ? false : options.animated;
+    this.interactive = options.interactive === undefined ? false : options.interactive;
   }
 
+  /* Draws this shape on the canvas */
   draw() {
     if (this.isFilled) {
       this.fill();
@@ -226,7 +229,7 @@ class _Shape {
 class Circle extends _Shape {
   constructor(options, ctx, canvas) {
     super(options, ctx, canvas);
-    this.radius = options.radius || 50; // current radius
+    this.curRadius = options.radius || 50;
     this.originalRadius = options.radius || 50;
     this.minRadius = options.shrinkRadius || 5;
     this.maxRadius = options.radius;
@@ -238,7 +241,7 @@ class Circle extends _Shape {
 
   _drawCircle() {
     this.ctx.beginPath();
-    this.ctx.arc(this.x, this.y, this.radius, degToRad(0), degToRad(360), false);
+    this.ctx.arc(this.x, this.y, this.curRadius, degToRad(0), degToRad(360), false);
   }
 
   fill() {
@@ -253,7 +256,7 @@ class Circle extends _Shape {
     this.ctx.stroke();
   }
 
-  /* Updates the circle */
+  /* Updates this circle's state */
   update(options = {}) {
     const { mouse_x, mouse_y, range } = options;
     if (this.animated) {
@@ -269,6 +272,7 @@ class Circle extends _Shape {
   _updatePosition() {
     // Check walls
     if (this.x + this.radius > this.canvas.width || this.x - this.radius < 0) {
+      // Switch directions
       this.dx = -this.dx;
     }
     if (this.y + this.radius > this.canvas.height || this.y - this.radius < 0) {
@@ -281,18 +285,15 @@ class Circle extends _Shape {
 
   /* Makes this circle interactive to the cursor */
   _addInteractivity(mouse_x, mouse_y, range) {
-    // Temporary adjustment 
-    const adj = (window.innerWidth - this.canvas.width) / 2
-    const adj2 = (window.innerHeight - this.canvas.height) / 2
-    if (Math.abs(mouse_x - this.x - adj) < range && Math.abs(mouse_y - this.y - adj2) < range && this.radius > this.minRadius + this.shrinkRate) {
+    if (Math.abs(mouse_x - this.x) < range && Math.abs(mouse_y - this.y) < range && this.curRadius >= this.minRadius + this.shrinkRate) {
       // Shrink circle
-      this.radius -= this.shrinkRate;
-    } else if (Math.abs(mouse_x - this.x - adj) >= range && Math.abs(mouse_y - this.y - adj2) >= range && this.radius < this.originalRadius) {
+      this.curRadius -= this.shrinkRate;
+    } else if (Math.abs(mouse_x - this.x) >= range && Math.abs(mouse_y - this.y) >= range && this.curRadius < this.originalRadius) {
       // Grow circle back to its original size
-      this.radius += this.growRate;
-    } else if (this.radius > this.originalRadius) {
+      this.curRadius += this.growRate;
+    } else if (this.curRadius > this.originalRadius) {
       // Circle is too big
-      this.radius -= 1;
+      this.curRadius -= 1;
     }
   }
 
@@ -317,32 +318,31 @@ class Rectangle extends _Shape {
   constructor(options, ctx, canvas) {
     super(options, ctx, canvas);
     this.width = options.width || 100;
-    this.height = options.height || 100; // current height
+    this.curHeight = options.height || 100;
     this.originalHeight = options.height;
     this.minHeight = options.minHeight || options.height;
-    this.ampRate = options.speed;
+    this.ampRate = options.speed || 10;
   }
 
   fill() {
     this.ctx.fillStyle = this.colour;
-    this.ctx.fillRect(this.x, this.y, this.width, this.height);
+    this.ctx.fillRect(this.x, this.y, this.width, this.curHeight);
   }
 
   outline() {
     this.ctx.strokeStyle = this.colour;
-    this.ctx.strokeRect(this.x, this.y, this.width, this.height);
+    this.ctx.strokeRect(this.x, this.y, this.width, this.curHeight);
   }
 
+  /* Updates this rectangle's state */
   update(mouse_x, range) {
-    // Account for the different origin points in window and canvas (assuming browser is in full screen)
-    const adj = (window.innerWidth - this.canvas.width) / 2
-    if (Math.abs(mouse_x - this.x - adj) <= range && this.height > this.minHeight) {
+    if (Math.abs(mouse_x - this.x) <= range && this.curHeight > this.minHeight) {
       // Compress rectangle
-      this.height -= this.ampRate;
+      this.curHeight -= this.ampRate;
       this.y += this.ampRate;
-    } else if (Math.abs(mouse_x - this.x - adj) > range && this.height < this.originalHeight) {
+    } else if (Math.abs(mouse_x - this.x) > range && this.curHeight < this.originalHeight) {
       // Restore rectangle back to its original height
-      this.height += this.ampRate;
+      this.curHeight += this.ampRate;
       this.y -= this.ampRate;
     }
     this.draw();
