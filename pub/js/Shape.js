@@ -31,8 +31,16 @@ class Shape {
     this.MAX_WIDTH = this.canvas.width;
     this.MAX_HEIGHT = this.canvas.height;
     this.MIN_HEIGHT = this.canvas.height * 0.10;
+    this.MIN_WIDTH = this.canvas.width * 0.10;
     this.COMPRESSED_HEIGHT = this.canvas.height * 0.10;
     this.AMP_SPEED = 25;
+
+    // Colours
+    this.colours = {
+      rariSeatOrange: ["#031226", "#2E4159", "#64758C", "#B0C1D9", "#E38F4C"],
+      colors02: ["#3F8EBF", "#042F40", "#167362", "#F2A20C", "#D90404"],
+      colorThemesky: ["#00020D", "#242B40", "#101726", "#4F5F73", "#8195A6"],
+    }
   }
 
   /* Creates and returns a new rectangle instance given the parameters in <options>*/
@@ -63,7 +71,7 @@ class Shape {
   /* A helper function used to create random circles given some options, optionally drawing them
   on the canvas. This can be used to create static, animated, or even interactive circles. */
   _createRandomCircles(options, draw = false, animated = false, interactive = false) {
-    const { n, maxRadius, minRadius, shrinkRadius, filled, colours, speed, shrinkRate, growRate } = options;
+    let { n, maxRadius, minRadius, shrinkRadius, filled, colours, speed, shrinkRate, growRate } = options;
     // Set optional params
     maxRadius = maxRadius === undefined ? this.MAX_RADIUS : maxRadius;
     minRadius = minRadius === undefined ? this.MIN_RADIUS : minRadius;
@@ -106,9 +114,7 @@ class Shape {
     // Keep track of the mouse's position
     this._addMouseMoveEventListener(range);
     this._createRandomCircles(options, !animated, animated, true);
-    if (animated) {
-      this.animateCircles();
-    }
+    this.animateCircles();
   }
 
   /* Generates n random static rectangles */
@@ -118,17 +124,19 @@ class Shape {
 
   /* A helper function used to create random static rectangles given some options */
   _createRandomRectangles(options, draw = false) {
-    const { n, filled, colours, maxWidth, maxHeight } = options;
+    let { n, filled, colours, maxWidth, maxHeight, minWidth, minHeight } = options;
     // Set optional params
     filled = filled === undefined ? true : filled;
     maxWidth = maxWidth === undefined ? this.MAX_WIDTH : maxWidth;
     maxHeight = maxHeight === undefined ? this.MAX_HEIGHT : maxHeight;
+    minWidth = minWidth === undefined ? this.MIN_WIDTH : minWidth;
+    minHeight = minHeight === undefined ? this.MIN_HEIGHT : minHeight;
 
     for (let i = 0; i < n; i++) {
       const x = Math.random() * this.canvas.width;
       const y = Math.random() * this.canvas.height;
-      const width = Math.random() * maxWidth;
-      const height = Math.random() * maxHeight;
+      const width = Math.random() * (maxWidth - minWidth) + minWidth;
+      const height = Math.random() * (maxHeight - minHeight) + minHeight;
       const rectColour = colours === undefined ? randomColour() : colours[Math.floor(Math.random() * colours.length)];
       const rect = this.makeRectangle({ x, y, width, height, colour: rectColour, filled })
       if (draw) {
@@ -144,7 +152,7 @@ class Shape {
       this.mouse.x = e.x - this._rect.left;
       this.mouse.y = e.y - this._rect.top;
     })
-    this.mouse.range = range === undefined ? RANGE : range;
+    this.mouse.range = range === undefined ? this.RANGE : range;
   }
 
   /* Generates n random amplifying rectangles */
@@ -157,7 +165,7 @@ class Shape {
 
   /* A helper method that creates random rectangles of the same width whose base is at the bottom of the canvas */
   _createRectanglesFixedToBottom(options) {
-    const { n, colours, minHeight, maxHeight, compressedHeight, speed } = options;
+    let { n, colours, minHeight, maxHeight, compressedHeight, speed } = options;
     // Set optional params
     minHeight = minHeight === undefined ? this.MIN_HEIGHT : minHeight;
     maxHeight = maxHeight === undefined ? this.MAX_HEIGHT : maxHeight;
@@ -271,11 +279,11 @@ class Circle extends _Shape {
   /* Updates the position of this circle, taking into account the boundaries */
   _updatePosition() {
     // Check walls
-    if (this.x + this.radius > this.canvas.width || this.x - this.radius < 0) {
+    if (this.x + this.curRadius > this.canvas.width || this.x - this.curRadius < 0) {
       // Switch directions
       this.dx = -this.dx;
     }
-    if (this.y + this.radius > this.canvas.height || this.y - this.radius < 0) {
+    if (this.y + this.curRadius > this.canvas.height || this.y - this.curRadius < 0) {
       this.dy = -this.dy;
     }
 
