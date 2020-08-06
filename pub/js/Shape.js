@@ -202,6 +202,43 @@ class Shape {
     this.clearCanvas();
     this.rectangles.forEach(rect => rect.update(this.mouse.x, this.mouse.range));
   }
+
+  /* Returns true iff the complex number z=x+iy belongs to the set */
+  _belongsToMandelbrotSet(x, y) {
+    let realComp = x;
+    let imaginaryComp = y;
+    const maxIterations = 100;
+
+    for (let i = 0; i < maxIterations; i++) {
+      const tempRealComp = realComp * realComp - imaginaryComp * imaginaryComp + x;
+      const tempImComp = 2 * realComp * imaginaryComp + y;
+      realComp = tempRealComp;
+      imaginaryComp = tempImComp;
+
+      if (realComp * imaginaryComp > 5)
+        return (i / maxIterations * 100);
+    }
+    return 0; // z is in set
+  }
+
+  createMandelbrotSetFractals() {
+    let magnificationFactor = 150;
+    let panX = 2.5;
+    let panY = 1.3;
+
+    for (let x = 0; x < this.canvas.width; x++) {
+      for (let y = 0; y < this.canvas.height; y++) {
+        const belongsToSet = this._belongsToMandelbrotSet(x / magnificationFactor - panX, y / magnificationFactor - panY);
+        if (belongsToSet == 0) {
+          this.context.fillStyle = '#000';
+          this.context.fillRect(x, y, 1, 1); // Draw a black pixel
+        } else {
+          this.context.fillStyle = 'hsl(0, 100%, ' + belongsToSet + '%)';
+          this.context.fillRect(x, y, 1, 1); // Draw a colourful pixel
+        }
+      }
+    }
+  }
 }
 
 /* An "abstract" class. All shapes should extend this class. */
