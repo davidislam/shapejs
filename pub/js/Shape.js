@@ -61,6 +61,7 @@ class Shape {
   fitCanvasToScreen() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
+    this._rect = this.canvas.getBoundingClientRect(); // Update
   }
 
   /* Generates random static circles given the parameters in <options> */
@@ -145,12 +146,16 @@ class Shape {
     }
   }
 
+  /* A helper function used to set this mouse's position relative to the canvas */
+  _setMousePosition(e) {
+    this.mouse.x = e.x - this._rect.left;
+    this.mouse.y = e.y - this._rect.top;
+  }
+
   /* A helper function used to add a 'mousemove' event to the canvas */
   _addMouseMoveEventListener(range) {
     this.canvas.addEventListener("mousemove", e => {
-      // Get the coordinates relative to this canvas
-      this.mouse.x = e.x - this._rect.left;
-      this.mouse.y = e.y - this._rect.top;
+      this._setMousePosition(e);
     })
     this.mouse.range = range === undefined ? this.RANGE : range;
   }
@@ -203,42 +208,85 @@ class Shape {
     this.rectangles.forEach(rect => rect.update(this.mouse.x, this.mouse.range));
   }
 
-  /* Returns true iff the complex number z=x+iy belongs to the set */
-  _belongsToMandelbrotSet(x, y) {
-    let realComp = x;
-    let imaginaryComp = y;
-    const maxIterations = 100;
-
-    for (let i = 0; i < maxIterations; i++) {
-      const tempRealComp = realComp * realComp - imaginaryComp * imaginaryComp + x;
-      const tempImComp = 2 * realComp * imaginaryComp + y;
-      realComp = tempRealComp;
-      imaginaryComp = tempImComp;
-
-      if (realComp * imaginaryComp > 5)
-        return (i / maxIterations * 100);
-    }
-    return 0; // z is in set
-  }
-
-  createMandelbrotSetFractals() {
-    let magnificationFactor = 150;
+  /* Generates Mandelbrotset fractals with mouse interactivity */
+  generateMandelbrotSetFractals(options) {
+    const Shape = this; // bound this
+    // Initialize params
+    // TODO: These depend on canvas size
+    let zoom = 150;
     let panX = 2.5;
-    let panY = 1.3;
+    let panY = 1.5;
+    const offsetX = -Shape.canvas.width / 2;
+    const offsetY = -Shape.canvas.height / 2;
+    const zoomFactor = 2.01;
+    const maxIterations = 50;
+    const bailout = 5;
 
-    for (let x = 0; x < this.canvas.width; x++) {
-      for (let y = 0; y < this.canvas.height; y++) {
-        const belongsToSet = this._belongsToMandelbrotSet(x / magnificationFactor - panX, y / magnificationFactor - panY);
-        if (belongsToSet == 0) {
-          this.context.fillStyle = '#000';
-          this.context.fillRect(x, y, 1, 1); // Draw a black pixel
-        } else {
-          this.context.fillStyle = 'hsl(0, 100%, ' + belongsToSet + '%)';
-          this.context.fillRect(x, y, 1, 1); // Draw a colourful pixel
+    /* Returns 0 iff the complex number z=x+iy belongs to the set. Otherwise returns a percentage
+    used as colour lightness */
+    function _belongsToMandelbrotSet(x, y) {
+      let realComp = x;
+      let imaginaryComp = y;
+
+      for (let i = 0; i < maxIterations; i++) {
+        const tempRealComp = realComp * realComp - imaginaryComp * imaginaryComp + x;
+        const tempImComp = 2 * realComp * imaginaryComp + y;
+        realComp = tempRealComp;
+        imaginaryComp = tempImComp;
+
+        if (realComp * imaginaryComp > bailout)
+          return (i / maxIterations * 100); // z not in set
+      }
+      return 0; // z is in set i.e. failed to reach escape condition
+    }
+
+    /* Draws coloured pixels on the canvas creating the desired fractal using the 
+    so-called "escape time algorithm"*/
+    function _createMandelbrotSetFractals() {
+      for (let x = 0; x < Shape.canvas.width; x++) {
+        for (let y = 0; y < Shape.canvas.height; y++) {
+          const colourValue = _belongsToMandelbrotSet(x / zoom - panX, y / zoom - panY);
+          if (colourValue == 0) {
+            // Draw a black pixel
+            Shape.context.fillStyle = '#000';
+            Shape.context.fillRect(x, y, 1, 1);
+          } else {
+            // Draw a colourful pixel using CSS HSL function
+            Shape.context.fillStyle = 'hsl(0, 100%, ' + colourValue + '%)';
+            Shape.context.fillRect(x, y, 1, 1);
+          }
         }
       }
     }
+
+    /* Zooms the fractal at the mouse position */
+    function _zoomFractal(zoomin) {
+      if (zoomin) {
+        const dx = -(Shape.mouse.x + offsetX) / zoom;
+        const dy = -(Shape.mouse.y + offsetY) / zoom;
+        // log('dx', dx);
+        // log('dy', dy);
+        zoom *= zoomFactor;
+        panX += dx;
+        panY += dy;
+      } else {
+        //TODO
+      }
+    }
+
+    /* When user clicks down, zoom in; holding shift key, pan; holding alt/option, zoom out. */
+    Shape.canvas.addEventListener('mousedown', e => {
+      Shape._setMousePosition(e);
+      let zoomIn = true;
+      _zoomFractal(zoomIn)
+      // Re-render
+      _createMandelbrotSetFractals();
+    });
+
+    _createMandelbrotSetFractals();
   }
+
+
 }
 
 /* An "abstract" class. All shapes should extend this class. */
