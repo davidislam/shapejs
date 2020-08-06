@@ -3,5 +3,7 @@ const log = console.log;
 log("examples.js");
 
 const shapeInstance = new Shape("testing-canvas");
-shapeInstance.fitCanvasToScreen();
-shapeInstance.generateMandelbrotSetFractals({});
+// shapeInstance.fitCanvasToScreen();
+shapeInstance.generateMandelbrotSetFractals({
+  maxIterations: 100,
+});

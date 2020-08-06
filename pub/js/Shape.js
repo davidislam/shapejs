@@ -210,32 +210,35 @@ class Shape {
 
   /* Generates Mandelbrotset fractals with mouse interactivity */
   generateMandelbrotSetFractals(options) {
+    const { zoomFactor, maxIterations, hue } = options;
     const Shape = this; // bound this
     // Initialize params
     // TODO: These depend on canvas size
-    let zoom = 250;
+    let zoom = 150;
     let panX = 1.5;
     let panY = 1.2;
+    const _hue = hue == undefined ? 0 : hue;
     const offsetX = -Shape.canvas.width / 2;
     const offsetY = -Shape.canvas.height / 2;
-    const zoomFactor = 2.00;
-    const maxIterations = 50;
+    const defaultZoomFactor = zoomFactor == undefined ? 2.00 : zoomFactor;
+    let _zoomFactor;
+    const _maxIterations = maxIterations == undefined ? 150 : maxIterations;
     const bailout = 5;
 
     /* Returns 0 iff the complex number z=x+iy belongs to the set. Otherwise returns a percentage
-    used as colour lightness */
+    used for colour lightness */
     function _belongsToMandelbrotSet(x, y) {
       let realComp = x;
       let imaginaryComp = y;
 
-      for (let i = 0; i < maxIterations; i++) {
+      for (let i = 0; i < _maxIterations; i++) {
         const tempRealComp = realComp * realComp - imaginaryComp * imaginaryComp + x;
         const tempImComp = 2 * realComp * imaginaryComp + y;
         realComp = tempRealComp;
         imaginaryComp = tempImComp;
 
         if (realComp * imaginaryComp > bailout)
-          return (i / maxIterations * 100); // z not in set
+          return (i / _maxIterations * 100); // z not in set
       }
       return 0; // z is in set i.e. failed to reach escape condition
     }
@@ -252,7 +255,7 @@ class Shape {
             Shape.context.fillRect(x, y, 1, 1);
           } else {
             // Draw a colourful pixel using CSS HSL function
-            Shape.context.fillStyle = 'hsl(0, 100%, ' + colourValue + '%)';
+            Shape.context.fillStyle = 'hsl(' + _hue + ', 100%, ' + colourValue + '%)';
             Shape.context.fillRect(x, y, 1, 1);
           }
         }
@@ -262,17 +265,17 @@ class Shape {
     /* Zooms the fractal at the mouse position */
     function _zoomFractal(zoomin) {
       if (zoomin) {
-        zoom *= zoomFactor;
-        const dx = -(Shape.mouse.x + offsetX + panX + 90 * zoomFactor) / zoom * zoomFactor;
-        const dy = -(Shape.mouse.y + offsetY + panY + 50 * zoomFactor) / zoom * zoomFactor;
+        zoom *= _zoomFactor;
+        const dx = -(Shape.mouse.x + offsetX + panX + 90 * _zoomFactor) / zoom * _zoomFactor;
+        const dy = -(Shape.mouse.y + offsetY + panY + 50 * _zoomFactor) / zoom * _zoomFactor;
         // log('dx', dx);
         // log('dy', dy);
         panX += dx;
         panY += dy;
       } else {
-        zoom /= zoomFactor;
-        const dx = -(Shape.mouse.x + offsetX - panX - 90 * zoomFactor) / zoom;
-        const dy = -(Shape.mouse.y + offsetY - panY - 50 * zoomFactor) / zoom;
+        zoom /= _zoomFactor;
+        const dx = -(Shape.mouse.x + offsetX - panX - 90 * _zoomFactor) / zoom;
+        const dy = -(Shape.mouse.y + offsetY - panY - 50 * _zoomFactor) / zoom;
         // log('dx', dx);
         // log('dy', dy);
         panX += dx;
@@ -283,12 +286,14 @@ class Shape {
     /* When user clicks down, zoom in; holding shift key, pan; holding alt/option, zoom out. */
     Shape.canvas.addEventListener('mousedown', e => {
       Shape._setMousePosition(e);
-      let zoomIn = e.altKey ? false : true;
+      _zoomFactor = e.shiftKey ? 1.0 : defaultZoomFactor;
+      const zoomIn = e.altKey ? false : true;
       _zoomFractal(zoomIn)
       // Re-render
       _createMandelbrotSetFractals();
     });
 
+    // Init fractals
     _createMandelbrotSetFractals();
   }
 
