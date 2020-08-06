@@ -213,12 +213,12 @@ class Shape {
     const Shape = this; // bound this
     // Initialize params
     // TODO: These depend on canvas size
-    let zoom = 150;
-    let panX = 2.5;
-    let panY = 1.5;
+    let zoom = 250;
+    let panX = 1.5;
+    let panY = 1.2;
     const offsetX = -Shape.canvas.width / 2;
     const offsetY = -Shape.canvas.height / 2;
-    const zoomFactor = 2.01;
+    const zoomFactor = 2.00;
     const maxIterations = 50;
     const bailout = 5;
 
@@ -262,22 +262,28 @@ class Shape {
     /* Zooms the fractal at the mouse position */
     function _zoomFractal(zoomin) {
       if (zoomin) {
-        const dx = -(Shape.mouse.x + offsetX) / zoom;
-        const dy = -(Shape.mouse.y + offsetY) / zoom;
+        zoom *= zoomFactor;
+        const dx = -(Shape.mouse.x + offsetX + panX + 90 * zoomFactor) / zoom * zoomFactor;
+        const dy = -(Shape.mouse.y + offsetY + panY + 50 * zoomFactor) / zoom * zoomFactor;
         // log('dx', dx);
         // log('dy', dy);
-        zoom *= zoomFactor;
         panX += dx;
         panY += dy;
       } else {
-        //TODO
+        zoom /= zoomFactor;
+        const dx = -(Shape.mouse.x + offsetX - panX - 90 * zoomFactor) / zoom;
+        const dy = -(Shape.mouse.y + offsetY - panY - 50 * zoomFactor) / zoom;
+        // log('dx', dx);
+        // log('dy', dy);
+        panX += dx;
+        panY += dy;
       }
     }
 
     /* When user clicks down, zoom in; holding shift key, pan; holding alt/option, zoom out. */
     Shape.canvas.addEventListener('mousedown', e => {
       Shape._setMousePosition(e);
-      let zoomIn = true;
+      let zoomIn = e.altKey ? false : true;
       _zoomFractal(zoomIn)
       // Re-render
       _createMandelbrotSetFractals();
