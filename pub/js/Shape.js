@@ -208,6 +208,60 @@ class Shape {
     this.rectangles.forEach(rect => rect.update(this.mouse.x, this.mouse.range));
   }
 
+  generateJuliaFractals(options = {}) {
+    const Shape = this;
+    const width = this.canvas.width;
+    const height = this.canvas.height;
+    const ctx = this.context;
+    let constant = math.complex(0.28, 0.01);
+
+    // Turn a point on the complex plane into a color
+    function pointToColor(point) {
+      const red = point.re * 255;
+      const green = point.im * 255;
+      return `rgb(${red}, ${green}, 0)`;
+    }
+
+    // Turn XY pixel coordinates into a point on the complex plane
+    function pixelToPoint(x, y) {
+      // Map percentage of total width/height to a value from -1 to +1
+      const zx = (x / width) * 2 - 1
+      const zy = 1 - (y / height) * 2
+
+      // Create a complex number based on our new XY values
+      return math.complex(zx, zy)
+    }
+
+    // Draw a single pixel on our canvas
+    function drawPixel(x, y, color) {
+      ctx.fillStyle = color
+      ctx.fillRect(x, y, 1, 1)
+    }
+
+    // Redraw our canvas
+    function draw() {
+      // Turn the point under the mouse into a color
+      const color = pointToColor(constant);
+      // Draw over the pixel under the mouse with that color
+      drawPixel(Shape.mouse.x, Shape.mouse.y, color)
+    }
+
+    function update() {
+      // console.log(constant);
+      draw();
+    }
+
+    this.canvas.addEventListener('pointermove', e => {
+      this._setMousePosition(e);
+      constant = pixelToPoint(this.mouse.x, this.mouse.y);
+
+      // Round that point off to the nearest 0.01
+      constant.re = math.round(constant.re * 100) / 100;
+      constant.im = math.round(constant.im * 100) / 100;
+      update();
+    })
+  }
+
   /* Generates Mandelbrotset fractals with mouse interactivity */
   generateMandelbrotSetFractals(options) {
     const { zoomFactor, maxIterations, hue } = options;

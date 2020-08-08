@@ -1,6 +1,12 @@
 body {
   text-align: center;
   margin: 0;
+  background: black;
+  color: white;
+}
+
+canvas {
+  border: 1px solid white;
 }
 
 hr {
