@@ -209,17 +209,37 @@ class Shape {
   }
 
   generateJuliaFractals(options = {}) {
+    const { maxIterations, hue } = options;
     const Shape = this;
     const width = this.canvas.width;
     const height = this.canvas.height;
     const ctx = this.context;
     let constant = math.complex(0.28, 0.01);
+    const _maxIterations = maxIterations == undefined ? 64 : maxIterations;
+    let clicked = false;
+    let pan = math.complex(0, 0);
+    let zoom = 1;
+    const _hue = hue == undefined ? 0 : hue;
+
+    function julia(z, i = 0) {
+      // Apply formula
+      z = z.mul(z);
+      z = z.add(constant);
+      if (math.abs(z) > 2 || i == _maxIterations)
+        return i;
+      return julia(z, i + 1);
+    }
 
     // Turn a point on the complex plane into a color
     function pointToColor(point) {
-      const red = point.re * 255;
-      const green = point.im * 255;
-      return `rgb(${red}, ${green}, 0)`;
+      const iterations = julia(point);
+      const percentage = iterations / _maxIterations;
+      // point = point.sub(constant);
+      // const red = percentage * 255;
+      // const green = percentage * 255;
+      // const blue = percentage * 255;
+      return `hsl(${_hue},100%,${percentage * 100}%)`;
+      // return `rgb(${red}, ${green}, ${blue})`;
     }
 
     // Turn XY pixel coordinates into a point on the complex plane
@@ -228,8 +248,12 @@ class Shape {
       const zx = (x / width) * 2 - 1
       const zy = 1 - (y / height) * 2
 
+      let z = math.complex(zx, zy);
+      z = z.div(zoom);
+      z = z.add(pan);
+
       // Create a complex number based on our new XY values
-      return math.complex(zx, zy)
+      return z
     }
 
     // Draw a single pixel on our canvas
@@ -240,10 +264,13 @@ class Shape {
 
     // Redraw our canvas
     function draw() {
-      // Turn the point under the mouse into a color
-      const color = pointToColor(constant);
-      // Draw over the pixel under the mouse with that color
-      drawPixel(Shape.mouse.x, Shape.mouse.y, color)
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const point = pixelToPoint(x, y);
+          const color = pointToColor(point);
+          drawPixel(x, y, color);
+        }
+      }
     }
 
     function update() {
@@ -251,15 +278,35 @@ class Shape {
       draw();
     }
 
-    this.canvas.addEventListener('pointermove', e => {
-      this._setMousePosition(e);
-      constant = pixelToPoint(this.mouse.x, this.mouse.y);
+    function click(event) {
+      if (!clicked) {
+        clicked = true;
+        return;
+      }
+      Shape._setMousePosition(event);
+      pan = pixelToPoint(Shape.mouse.x, Shape.mouse.y);
+      zoom *= 2;
+      update();
+    }
+
+    function move(event) {
+      // Don't move after first click
+      if (clicked)
+        return;
+
+      Shape._setMousePosition(event);
+      constant = pixelToPoint(Shape.mouse.x, Shape.mouse.y);
 
       // Round that point off to the nearest 0.01
       constant.re = math.round(constant.re * 100) / 100;
       constant.im = math.round(constant.im * 100) / 100;
       update();
-    })
+    }
+
+    this.canvas.addEventListener('pointermove', move);
+    this.canvas.addEventListener('click', click);
+
+    update();
   }
 
   /* Generates Mandelbrotset fractals with mouse interactivity */
