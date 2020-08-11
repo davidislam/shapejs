@@ -94,7 +94,7 @@ class Shape {
       const dx = randX < 0 ? Math.floor(randX) * speed : Math.ceil(randX) * speed;
       const dy = randY < 0 ? Math.floor(randY) * speed : Math.ceil(randY) * speed;
       // Colour
-      const circleColour = colours === undefined ? randomColour() : colours[Math.floor(Math.random() * colours.length)];
+      const circleColour = colours === undefined ? randomRGBAColour() : randomColour(colours);
       // Make new circle
       const newCircle = this.makeCircle({ x, y, radius: circleRadius, filled, dx, dy, colour: circleColour, shrinkRate, growRate, shrinkRadius, interactive, animated });
       if (draw) {
@@ -138,7 +138,7 @@ class Shape {
       const y = Math.random() * this.canvas.height;
       const width = Math.random() * (maxWidth - minWidth) + minWidth;
       const height = Math.random() * (maxHeight - minHeight) + minHeight;
-      const rectColour = colours === undefined ? randomColour() : colours[Math.floor(Math.random() * colours.length)];
+      const rectColour = colours === undefined ? randomRGBAColour() : randomColour(colours);
       const rect = this.makeRectangle({ x, y, width, height, colour: rectColour, filled })
       if (draw) {
         rect.draw();
@@ -184,7 +184,7 @@ class Shape {
       const x = width * i;
       const height = (Math.random() * (maxHeight - minHeight)) + minHeight;
       const y = this.canvas.height - height;
-      const colour = colours === undefined ? randomColour() : colours[Math.floor(Math.random() * colours.length)];
+      const colour = colours === undefined ? randomRGBAColour() : randomColour(colours);
       this.makeRectangle({ x, y, width, height, minHeight: compressedHeight, colour, filled, speed });
     }
   }
@@ -558,8 +558,4 @@ class Rectangle extends _Shape {
 /** Helper functions **/
 
 // Returns a random RGBA colour
-const randomColour = () => `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${Math.random()})`;
 
-function degToRad(degrees) {
-  return degrees * Math.PI / 180;
-};
