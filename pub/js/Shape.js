@@ -470,6 +470,9 @@ class Circle extends _Shape {
     if (this.interactive) {
       this._addInteractivity(mouse_x, mouse_y, range);
     }
+    if (this.gravity) {
+      this._addGravity()
+    }
     this.draw();
   }
 
@@ -502,6 +505,23 @@ class Circle extends _Shape {
     }
   }
 
+  /* Simulates the effect of gravity on this ball */
+  animateWithGravity(acceleration = 1) {
+    this.gravity = true;
+    this.acceleration = acceleration;
+    this._animate();
+  }
+
+  _addGravity() {
+    if (this.y + this.curRadius > this.canvas.height) {
+      this.dy = -this.dy;
+    } else {
+      this.dy += this.acceleration;
+    }
+
+    this.y += this.dy;
+  }
+
   /* Animates the circle by bouncing it off walls */
   animate(speed = 1) {
     this.animated = true;
@@ -509,6 +529,7 @@ class Circle extends _Shape {
     this._animate();
   }
 
+  // Animation loop
   _animate() {
     requestAnimationFrame(this._animate.bind(this));
     // Clear the canvas before redraw
@@ -554,8 +575,4 @@ class Rectangle extends _Shape {
   }
 
 }
-
-/** Helper functions **/
-
-// Returns a random RGBA colour
 

@@ -1,15 +1,15 @@
 body {
   text-align: center;
   margin: 0;
-  background: black;
-  color: white;
+  /* background: black;
+  color: white; */
 }
 
-canvas {
+/* canvas {
   border: 1px solid white;
-}
+} */
 
-hr {
+/* hr {
   width: 65%;
   margin-top: 30px;
-}
+} */
