@@ -40,6 +40,7 @@ class Shape {
       rariSeatOrange: ["#031226", "#2E4159", "#64758C", "#B0C1D9", "#E38F4C"],
       colors02: ["#3F8EBF", "#042F40", "#167362", "#F2A20C", "#D90404"],
       colorThemesky: ["#00020D", "#242B40", "#101726", "#4F5F73", "#8195A6"],
+      colourful: ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
     }
   }
 
@@ -101,6 +102,30 @@ class Shape {
         newCircle.draw();
       }
     }
+  }
+
+  // A helper used to create random circles for gravity simulations
+  _createRandomCircles2(options) {
+    this.circles = [];
+    let { n, colours, minRadius, maxRadius, acceleration, friction } = options;
+    minRadius = minRadius ? minRadius : this.MIN_RADIUS;
+    maxRadius = maxRadius ? maxRadius : this.MAX_RADIUS;
+    for (let i = 0; i < n; i++) {
+      const radius = randomIntFromRange(minRadius, maxRadius);
+      const x = randomIntFromRange(radius, this.canvas.width - radius);
+      const y = randomIntFromRange(0, this.canvas.height / 2);
+      const colour = randomColour(colours);
+      const dx = randomIntFromRange(-2, 2);
+      const dy = randomIntFromRange(-2, 2);
+      this.makeCircle({ x, y, dx, dy, colour, radius, gravity: true, acceleration, friction })
+    }
+  }
+
+  /* Generates n random bouncing circles with gravity */
+  generateBouncingCircles(options) {
+    this._createRandomCircles2(options);
+    this.canvas.addEventListener('click', () => this._createRandomCircles2(options))
+    this.animateCircles();
   }
 
   /* Generates n random animated circles */
@@ -409,6 +434,7 @@ class _Shape {
     this.colour = options.colour || "rgb(0,0,0)";
     this.x = options.x || 0;
     this.y = options.y || 0;
+    this.stroke = options.stroke ? options.stroke : true;
     this.isFilled = options.filled === undefined ? true : options.filled;
     this.animated = options.animated === undefined ? false : options.animated;
     this.interactive = options.interactive === undefined ? false : options.interactive;
@@ -442,6 +468,9 @@ class Circle extends _Shape {
     this.dy = options.dy || 1;
     this.shrinkRate = options.shrinkRate || 1;
     this.growRate = options.growRate || 1;
+    this.gravity = options.gravity || false;
+    this.friction = options.friction || 0.95;
+    this.acceleration = options.acceleration || 0.5;
   }
 
   _drawCircle() {
@@ -453,6 +482,9 @@ class Circle extends _Shape {
     this.ctx.fillStyle = this.colour;
     this._drawCircle();
     this.ctx.fill();
+    if (this.stroke)
+      this.ctx.stroke();
+    this.ctx.closePath();
   }
 
   outline() {
@@ -506,19 +538,26 @@ class Circle extends _Shape {
   }
 
   /* Simulates the effect of gravity on this ball */
-  animateWithGravity(acceleration = 1) {
+  animateWithGravity(acceleration = 1, friction = 0.95) {
     this.gravity = true;
     this.acceleration = acceleration;
+    this.friction = friction;
     this._animate();
   }
 
   _addGravity() {
-    if (this.y + this.curRadius > this.canvas.height) {
-      this.dy = -this.dy;
+    if (this.y + this.curRadius + this.dy > this.canvas.height) {
+      this.dy = -this.dy * this.friction;
+      this.dx = this.dx * this.friction;
     } else {
       this.dy += this.acceleration;
     }
 
+    if (this.x + this.curRadius >= this.canvas.width || this.x - this.curRadius <= 0) {
+      this.dx = -this.dx * this.friction;
+    }
+
+    this.x += this.dx;
     this.y += this.dy;
   }
 
