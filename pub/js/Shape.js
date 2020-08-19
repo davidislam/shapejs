@@ -143,24 +143,28 @@ class Shape {
     this.animateCircles();
   }
 
-  /* Generates colliding particles with interactivity */
+  /* Generates colliding particles with mouse interactivity */
   generateCollidingParticles(options) {
     this.circles = [];
-    let { n, radius, colour } = options;
+    let { n, radius, colours, speed, range } = options;
+    speed = speed ? speed : this.SPEED;
+    range = range ? range : this.RANGE;
+
+    // Create <n> particles with given and randomized properties
     for (let i = 0; i < n; i++) {
       let x = randomIntFromRange(radius, this.canvas.width - radius);
       let y = randomIntFromRange(radius, this.canvas.height - radius);
-      const dx = Math.random() - 0.5;
-      const dy = Math.random() - 0.5;
+      const dx = (Math.random() - 0.5) * speed;
+      const dy = (Math.random() - 0.5) * speed;
+      const colour = randomColour(colours);
 
       if (i !== 0) {
         // Ensure particles are non-overlapping
         for (let j = 0; j < this.circles.length; j++) {
-          // Distance between (x,y) and (xj,yj)
           const cur = this.circles[j];
           const dist = distance(x, y, cur.x, cur.y);
           if (dist - (radius + cur.radius) < 0) {
-            // Particles are overlapping. Regenerate.
+            // Particles are overlapping. Try choosing x & y again.
             x = randomIntFromRange(radius, this.canvas.width - radius);
             y = randomIntFromRange(radius, this.canvas.height - radius);
 
@@ -169,8 +173,9 @@ class Shape {
           }
         }
       }
-      this.makeCircle({ x, y, colour, radius, filled: false, dx, dy, collision: true }).draw();
+      this.makeCircle({ x, y, colour, radius, dx, dy, collision: true });
     }
+    this._addMouseMoveEventListener(range);
     this.animateCircles();
   }
 
@@ -209,11 +214,11 @@ class Shape {
   }
 
   /* A helper function used to add a 'mousemove' event to the canvas */
-  _addMouseMoveEventListener(range) {
+  _addMouseMoveEventListener(range = this.RANGE) {
     this.canvas.addEventListener("mousemove", e => {
       this._setMousePosition(e);
     })
-    this.mouse.range = range === undefined ? this.RANGE : range;
+    this.mouse.range = range;
   }
 
   /* Generates n random amplifying rectangles */
@@ -254,7 +259,12 @@ class Shape {
   animateCircles() {
     requestAnimationFrame(this.animateCircles.bind(this));
     this.clearCanvas();
-    this.circles.forEach(circle => circle.update({ mouse_x: this.mouse.x, mouse_y: this.mouse.y, range: this.mouse.range, particles: this.circles }));
+    this.circles.forEach(circle => circle.update({
+      mouse_x: this.mouse.x,
+      mouse_y: this.mouse.y,
+      range: this.mouse.range,
+      particles: this.circles
+    }));
   }
 
   /* Animates the rectangles in an amplifying way */
@@ -504,6 +514,8 @@ class Circle extends _Shape {
     this.friction = options.friction || 0.95;
     this.acceleration = options.acceleration || 0.5;
     this.collision = options.collision || false;
+    this.mass = 1;
+    this.opacity = 0;
   }
 
   _drawCircle() {
@@ -539,22 +551,34 @@ class Circle extends _Shape {
       this._addGravity()
     }
     if (this.collision) {
-      this._addCollision(particles);
+      this._addCollision(mouse_x, mouse_y, range, particles);
+      this.draw2();
+      return;
     }
     this.draw();
   }
 
-  // Adds collision detection to every particle in <particles>
-  _addCollision(particles) {
+  // Draws this circle with opacity
+  draw2() {
+    const ctx = this.ctx;
+    this._drawCircle();
+    ctx.globalAlpha = this.opacity;
+    ctx.fillStyle = this.colour;
+    ctx.fill();
+    ctx.closePath();
+  }
 
+  // Adds collision detection to this particle considering every particle in <particles>
+  _addCollision(mouse_x, mouse_y, range, particles) {
+
+    // Check for collisions
     for (let i = 0; i < particles.length; i++) {
-      // Check for collisions
       const cur = particles[i];
       if (this === cur)
         continue;
       const dist = distance(this.x, this.y, cur.x, cur.y);
       if (dist - (this.radius + cur.radius) < 0) {
-        log('collision detected');
+        resolveCollision(this, cur);
       }
     }
 
@@ -564,6 +588,14 @@ class Circle extends _Shape {
     }
     if (this.y - this.radius <= 0 || this.radius + this.y >= this.canvas.height) {
       this.dy = -this.dy;
+    }
+
+    // Add mouse interactivity
+    if (distance(mouse_x, mouse_y, this.x, this.y) < range && this.opacity < 0.8) {
+      this.opacity += 0.03;
+    } else {
+      this.opacity -= 0.03;
+      this.opacity = Math.max(0, this.opacity);
     }
 
     this.x += this.dx;
