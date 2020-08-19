@@ -3,10 +3,9 @@ const log = console.log;
 log("examples.js");
 
 const shapeInstance = new Shape("testing-canvas");
-shapeInstance.generateCollidingParticles({
-  n: 300,
-  radius: 5,
-  colours: shapeInstance.colours.colors02,
-  speed: 3,
-  range: 150
+shapeInstance.generateFollowingParticles({
+  n: 1000,
+  colours: shapeInstance.colours.colorThemesky,
+  range: 50,
+  maxRadius: 40
 })

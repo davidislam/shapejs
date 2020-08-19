@@ -42,6 +42,14 @@ class Shape {
       colorThemesky: ["#00020D", "#242B40", "#101726", "#4F5F73", "#8195A6"],
       colourful: ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
     }
+
+    this._addWindowResizeEventListener();
+
+    // Remove mouse position periodically
+    setInterval(() => {
+      this.mouse.x = undefined,
+        this.mouse.y = undefined
+    }, 1000);
   }
 
   /* Creates and returns a new rectangle instance given the parameters in <options>*/
@@ -177,6 +185,34 @@ class Shape {
     }
     this._addMouseMoveEventListener(range);
     this.animateCircles();
+  }
+
+  /* Generates particles that follow the mouse cursor */
+  generateFollowingParticles(options) {
+    this.circles = [];
+    let { n, colours, maxRadius, range, shrinkRate, growRate } = options;
+    maxRadius = maxRadius ? maxRadius : this.MAX_RADIUS;
+    range = range ? range : this.RANGE;
+    shrinkRate = shrinkRate ? shrinkRate : 0.1;
+    growRate = growRate ? growRate : 3;
+    const radius = 0;
+    const shrinkRadius = 0;
+    for (let i = 0; i < n; i++) {
+      const x = randomIntFromRange(0, this.canvas.width);
+      const y = randomIntFromRange(0, this.canvas.height);
+      const dx = (Math.random() * 0.2) - 0.1;
+      const dy = (Math.random() * 0.2) - 0.1;
+      const colour = randomColour(colours);
+      this.makeCircle({ x, y, dx, dy, radius, colour, shrinkRadius, maxRadius, shrinkRate, growRate, fp: true });
+    }
+    this._addMouseMoveEventListener(range);
+    this.animateCircles();
+  }
+
+  _addWindowResizeEventListener() {
+    window.addEventListener('resize', () => {
+      this._rect = this.canvas.getBoundingClientRect();
+    })
   }
 
   /* Generates n random static rectangles */
@@ -475,7 +511,7 @@ class _Shape {
     this.colour = options.colour || "rgb(0,0,0)";
     this.x = options.x || 0;
     this.y = options.y || 0;
-    this.stroke = options.stroke ? options.stroke : true;
+    this.stroke = options.stroke ? options.stroke : false;
     this.isFilled = options.filled === undefined ? true : options.filled;
     this.animated = options.animated === undefined ? false : options.animated;
     this.interactive = options.interactive === undefined ? false : options.interactive;
@@ -501,11 +537,11 @@ class _Shape {
 class Circle extends _Shape {
   constructor(options, ctx, canvas) {
     super(options, ctx, canvas);
-    this.radius = options.radius || 50;
-    this.curRadius = options.radius || 50;
-    this.originalRadius = options.radius || 50;
-    this.minRadius = options.shrinkRadius || 5;
-    this.maxRadius = options.radius;
+    this.radius = options.radius ? options.radius : 50;
+    this.curRadius = options.radius ? options.radius : 50;
+    this.originalRadius = options.radius ? options.radius : 50;
+    this.minRadius = options.shrinkRadius ? options.shrinkRadius : 5;
+    this.maxRadius = options.maxRadius;
     this.dx = options.dx || 1;
     this.dy = options.dy || 1;
     this.shrinkRate = options.shrinkRate || 1;
@@ -516,6 +552,15 @@ class Circle extends _Shape {
     this.collision = options.collision || false;
     this.mass = 1;
     this.opacity = 0;
+    this.fp = options.fp || false; // following particles
+    if (options.radius === 0) {
+      this.radius = 0;
+      this.curRadius = 0;
+      this.originalRadius = 0;
+    }
+    if (options.shrinkRadius === 0) {
+      this.minRadius = 0;
+    }
   }
 
   _drawCircle() {
@@ -554,6 +599,9 @@ class Circle extends _Shape {
       this._addCollision(mouse_x, mouse_y, range, particles);
       this.draw2();
       return;
+    }
+    if (this.fp) {
+      this._updateParticles(mouse_x, mouse_y, range);
     }
     this.draw();
   }
@@ -615,6 +663,29 @@ class Circle extends _Shape {
 
     this.x += this.dx;
     this.y += this.dy;
+  }
+
+  _updateParticles(mouse_x, mouse_y, range) {
+    // Like _updatePosition() above
+    if (this.x + this.curRadius * 2 > this.canvas.width || this.x - this.curRadius * 2 < 0) {
+      this.dx = -this.dx;
+    }
+    if (this.y + this.curRadius * 2 > this.canvas.height || this.y - this.curRadius * 2 < 0) {
+      this.dy = -this.dy;
+    }
+    this.x += this.dx;
+    this.y += this.dy;
+
+    // Mouse interactivity
+    // Like _addInteractivity() below but grows instead of shrinks
+    if (distance(mouse_x, mouse_y, this.x, this.y) < range && this.curRadius < this.maxRadius) {
+      this.curRadius += this.growRate;
+    } else if (this.curRadius > this.minRadius) {
+      this.curRadius -= this.shrinkRate;
+    }
+    if (this.curRadius < 0) {
+      this.curRadius = 0;
+    }
   }
 
   /* Makes this circle interactive to the cursor */
