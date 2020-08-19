@@ -143,6 +143,37 @@ class Shape {
     this.animateCircles();
   }
 
+  /* Generates colliding particles with interactivity */
+  generateCollidingParticles(options) {
+    this.circles = [];
+    let { n, radius, colour } = options;
+    for (let i = 0; i < n; i++) {
+      let x = randomIntFromRange(radius, this.canvas.width - radius);
+      let y = randomIntFromRange(radius, this.canvas.height - radius);
+      const dx = Math.random() - 0.5;
+      const dy = Math.random() - 0.5;
+
+      if (i !== 0) {
+        // Ensure particles are non-overlapping
+        for (let j = 0; j < this.circles.length; j++) {
+          // Distance between (x,y) and (xj,yj)
+          const cur = this.circles[j];
+          const dist = distance(x, y, cur.x, cur.y);
+          if (dist - (radius + cur.radius) < 0) {
+            // Particles are overlapping. Regenerate.
+            x = randomIntFromRange(radius, this.canvas.width - radius);
+            y = randomIntFromRange(radius, this.canvas.height - radius);
+
+            // Compare to each particle again
+            j = -1;
+          }
+        }
+      }
+      this.makeCircle({ x, y, colour, radius, filled: false, dx, dy, collision: true }).draw();
+    }
+    this.animateCircles();
+  }
+
   /* Generates n random static rectangles */
   generateRectangles(options) {
     this._createRandomRectangles(options, true);
@@ -223,7 +254,7 @@ class Shape {
   animateCircles() {
     requestAnimationFrame(this.animateCircles.bind(this));
     this.clearCanvas();
-    this.circles.forEach(circle => circle.update({ mouse_x: this.mouse.x, mouse_y: this.mouse.y, range: this.mouse.range }));
+    this.circles.forEach(circle => circle.update({ mouse_x: this.mouse.x, mouse_y: this.mouse.y, range: this.mouse.range, particles: this.circles }));
   }
 
   /* Animates the rectangles in an amplifying way */
@@ -460,6 +491,7 @@ class _Shape {
 class Circle extends _Shape {
   constructor(options, ctx, canvas) {
     super(options, ctx, canvas);
+    this.radius = options.radius || 50;
     this.curRadius = options.radius || 50;
     this.originalRadius = options.radius || 50;
     this.minRadius = options.shrinkRadius || 5;
@@ -471,6 +503,7 @@ class Circle extends _Shape {
     this.gravity = options.gravity || false;
     this.friction = options.friction || 0.95;
     this.acceleration = options.acceleration || 0.5;
+    this.collision = options.collision || false;
   }
 
   _drawCircle() {
@@ -495,7 +528,7 @@ class Circle extends _Shape {
 
   /* Updates this circle's state */
   update(options = {}) {
-    const { mouse_x, mouse_y, range } = options;
+    const { mouse_x, mouse_y, range, particles } = options;
     if (this.animated) {
       this._updatePosition()
     }
@@ -505,7 +538,36 @@ class Circle extends _Shape {
     if (this.gravity) {
       this._addGravity()
     }
+    if (this.collision) {
+      this._addCollision(particles);
+    }
     this.draw();
+  }
+
+  // Adds collision detection to every particle in <particles>
+  _addCollision(particles) {
+
+    for (let i = 0; i < particles.length; i++) {
+      // Check for collisions
+      const cur = particles[i];
+      if (this === cur)
+        continue;
+      const dist = distance(this.x, this.y, cur.x, cur.y);
+      if (dist - (this.radius + cur.radius) < 0) {
+        log('collision detected');
+      }
+    }
+
+    // Check boundaries
+    if (this.x - this.radius <= 0 || this.radius + this.x >= this.canvas.width) {
+      this.dx = -this.dx;
+    }
+    if (this.y - this.radius <= 0 || this.radius + this.y >= this.canvas.height) {
+      this.dy = -this.dy;
+    }
+
+    this.x += this.dx;
+    this.y += this.dy;
   }
 
   /* Updates the position of this circle, taking into account the boundaries */
