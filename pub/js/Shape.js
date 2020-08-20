@@ -4,7 +4,7 @@ console.log("Shape.js");
 /* The main entry point to the library */
 class Shape {
 
-  /* Constructs a new instance of this library on the canvas with id <canvasID>*/
+  /* Constructs a new instance of this library using the canvas with id <canvasID> */
   constructor(canvasID) {
     this.canvas = document.querySelector(`#${canvasID}`);
     this.context = this.canvas.getContext("2d");
@@ -52,14 +52,14 @@ class Shape {
     }, 1000);
   }
 
-  /* Creates and returns a new rectangle instance given the parameters in <options>*/
+  /* Creates and returns a new rectangle instance given the properties in <options> */
   makeRectangle(options) {
     const newRect = new Rectangle(options, this.context, this.canvas);
     this.rectangles.push(newRect);
     return newRect;
   }
 
-  /* Creates and returns a new circle instance given the parameters in <options>*/
+  /* Creates and returns a new circle instance given the properties in <options> */
   makeCircle(options) {
     const newCircle = new Circle(options, this.context, this.canvas);
     this.circles.push(newCircle);
@@ -73,7 +73,7 @@ class Shape {
     this._rect = this.canvas.getBoundingClientRect(); // Update
   }
 
-  /* Generates random static circles given the parameters in <options> */
+  /* Generates random static circles given the properties in <options> */
   generateCircles(options) {
     this._createRandomCircles(options, true);
   }
@@ -91,8 +91,8 @@ class Shape {
     shrinkRate = shrinkRate === undefined ? this.SHRINK_RATE : shrinkRate;
     growRate = growRate === undefined ? this.GROW_RATE : growRate;
 
+    // Create <n> circles, randomizing some of their properties
     for (let i = 0; i < n; i++) {
-      // Create <n> circles, randomizing some of their properties
       const circleRadius = Math.random() * (maxRadius - minRadius) + minRadius; // minRadius <= circleRadius <= radius
       // Circle's center (x,y)
       const x = animated ? Math.random() * (this.canvas.width - circleRadius * 2) + circleRadius : Math.random() * this.canvas.width;
@@ -112,7 +112,7 @@ class Shape {
     }
   }
 
-  // A helper used to create random circles for gravity simulations
+  /* A helper used to create random circles for gravity simulations */
   _createRandomCircles2(options) {
     this.circles = [];
     let { n, colours, minRadius, maxRadius, acceleration, friction } = options;
@@ -151,8 +151,8 @@ class Shape {
     this.animateCircles();
   }
 
-  /* Generates colliding particles with mouse interactivity */
-  generateCollidingParticles(options) {
+  /* Generates colliding circles with mouse interactivity */
+  generateCollidingCircles(options) {
     this.circles = [];
     let { n, radius, colours, speed, range } = options;
     speed = speed ? speed : this.SPEED;
@@ -187,8 +187,8 @@ class Shape {
     this.animateCircles();
   }
 
-  /* Generates particles that follow the mouse cursor */
-  generateFollowingParticles(options) {
+  /* Generates circles that follow the mouse cursor */
+  generateFollowingCircles(options) {
     this.circles = [];
     let { n, colours, maxRadius, range, shrinkRate, growRate } = options;
     maxRadius = maxRadius ? maxRadius : this.MAX_RADIUS;
@@ -203,7 +203,7 @@ class Shape {
       const dx = (Math.random() * 0.2) - 0.1;
       const dy = (Math.random() * 0.2) - 0.1;
       const colour = randomColour(colours);
-      this.makeCircle({ x, y, dx, dy, radius, colour, shrinkRadius, maxRadius, shrinkRate, growRate, fp: true });
+      this.makeCircle({ x, y, dx, dy, radius, colour, shrinkRadius, maxRadius, shrinkRate, growRate, fp: true, animated: true });
     }
     this._addMouseMoveEventListener(range);
     this.animateCircles();
@@ -303,13 +303,14 @@ class Shape {
     }));
   }
 
-  /* Animates the rectangles in an amplifying way */
+  /* Animates the rectangles in the rectangles array */
   animateRectangles() {
     requestAnimationFrame(this.animateRectangles.bind(this));
     this.clearCanvas();
     this.rectangles.forEach(rect => rect.update(this.mouse.x, this.mouse.range));
   }
 
+  // This method uses mathjs to work with complex numbers
   generateJuliaFractals(options = {}) {
     const { maxIterations, hue } = options;
     const Shape = this;
@@ -471,16 +472,12 @@ class Shape {
         zoom *= _zoomFactor;
         const dx = -(Shape.mouse.x + offsetX + panX + 90 * _zoomFactor) / zoom * _zoomFactor;
         const dy = -(Shape.mouse.y + offsetY + panY + 50 * _zoomFactor) / zoom * _zoomFactor;
-        // log('dx', dx);
-        // log('dy', dy);
         panX += dx;
         panY += dy;
       } else {
         zoom /= _zoomFactor;
         const dx = -(Shape.mouse.x + offsetX - panX - 90 * _zoomFactor) / zoom;
         const dy = -(Shape.mouse.y + offsetY - panY - 50 * _zoomFactor) / zoom;
-        // log('dx', dx);
-        // log('dy', dy);
         panX += dx;
         panY += dy;
       }
@@ -517,6 +514,9 @@ class _Shape {
     this.interactive = options.interactive === undefined ? false : options.interactive;
   }
 
+  /* Updates this shape's state. Must be implemented. */
+  update() { }
+
   /* Draws this shape on the canvas */
   draw() {
     if (this.isFilled) {
@@ -537,30 +537,22 @@ class _Shape {
 class Circle extends _Shape {
   constructor(options, ctx, canvas) {
     super(options, ctx, canvas);
-    this.radius = options.radius ? options.radius : 50;
-    this.curRadius = options.radius ? options.radius : 50;
-    this.originalRadius = options.radius ? options.radius : 50;
-    this.minRadius = options.shrinkRadius ? options.shrinkRadius : 5;
+    this.radius = options.radius === undefined ? 50 : options.radius;
+    this.curRadius = options.radius ? options.radius : 50; // X
+    this.originalRadius = options.radius === undefined ? 50 : options.radius;
+    this.minRadius = options.shrinkRadius === undefined ? 5 : options.shrinkRadius;
     this.maxRadius = options.maxRadius;
-    this.dx = options.dx || 1;
-    this.dy = options.dy || 1;
-    this.shrinkRate = options.shrinkRate || 1;
-    this.growRate = options.growRate || 1;
-    this.gravity = options.gravity || false;
-    this.friction = options.friction || 0.95;
-    this.acceleration = options.acceleration || 0.5;
-    this.collision = options.collision || false;
+    this.dx = options.dx === undefined ? 1 : options.dx;
+    this.dy = options.dy === undefined ? 1 : options.dy;
+    this.shrinkRate = options.shrinkRate === undefined ? 1 : options.shrinkRate;
+    this.growRate = options.growRate === undefined ? 1 : options.growRate;
+    this.gravity = options.gravity === undefined ? false : options.gravity;
+    this.friction = options.friction === undefined ? 0.95 : options.friction;
+    this.acceleration = options.acceleration === undefined ? 0.5 : options.acceleration;
+    this.collision = options.collision === undefined ? false : options.collision;
     this.mass = 1;
     this.opacity = 0;
-    this.fp = options.fp || false; // following particles
-    if (options.radius === 0) {
-      this.radius = 0;
-      this.curRadius = 0;
-      this.originalRadius = 0;
-    }
-    if (options.shrinkRadius === 0) {
-      this.minRadius = 0;
-    }
+    this.fp = options.fp === undefined ? false : options.fp; // following particles
   }
 
   _drawCircle() {
@@ -583,7 +575,7 @@ class Circle extends _Shape {
     this.ctx.stroke();
   }
 
-  /* Updates this circle's state */
+  /* Updates this circle's state depending on its properties */
   update(options = {}) {
     const { mouse_x, mouse_y, range, particles } = options;
     if (this.animated) {
@@ -593,7 +585,7 @@ class Circle extends _Shape {
       this._addInteractivity(mouse_x, mouse_y, range);
     }
     if (this.gravity) {
-      this._addGravity()
+      this._addGravity();
     }
     if (this.collision) {
       this._addCollision(mouse_x, mouse_y, range, particles);
@@ -653,11 +645,11 @@ class Circle extends _Shape {
   /* Updates the position of this circle, taking into account the boundaries */
   _updatePosition() {
     // Check walls
-    if (this.x + this.curRadius > this.canvas.width || this.x - this.curRadius < 0) {
+    if (this.x + this.curRadius * 2 > this.canvas.width || this.x - this.curRadius * 2 < 0) {
       // Switch directions
       this.dx = -this.dx;
     }
-    if (this.y + this.curRadius > this.canvas.height || this.y - this.curRadius < 0) {
+    if (this.y + this.curRadius * 2 > this.canvas.height || this.y - this.curRadius * 2 < 0) {
       this.dy = -this.dy;
     }
 
@@ -666,17 +658,6 @@ class Circle extends _Shape {
   }
 
   _updateParticles(mouse_x, mouse_y, range) {
-    // Like _updatePosition() above
-    if (this.x + this.curRadius * 2 > this.canvas.width || this.x - this.curRadius * 2 < 0) {
-      this.dx = -this.dx;
-    }
-    if (this.y + this.curRadius * 2 > this.canvas.height || this.y - this.curRadius * 2 < 0) {
-      this.dy = -this.dy;
-    }
-    this.x += this.dx;
-    this.y += this.dy;
-
-    // Mouse interactivity
     // Like _addInteractivity() below but grows instead of shrinks
     if (distance(mouse_x, mouse_y, this.x, this.y) < range && this.curRadius < this.maxRadius) {
       this.curRadius += this.growRate;
