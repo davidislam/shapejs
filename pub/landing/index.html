@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create dynamic and interactive backgrounds with this small javascript library">
+
+  <title>Shape.js</title>
+
+  <!-- Bootstrap cdn -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="text-center">
+
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="masthead">
+      <div class="inner">
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link active" href="#">Home</a>
+          <a class="nav-link" href="#">Examples</a>
+          <a class="nav-link" href="#">API</a>
+        </nav>
+      </div>
+    </header>
+
+    <main role="main" class="inner cover">
+      <h1 class="cover-heading">Shape.js</h1>
+      <p class="lead">Create dynamic and interactive backgrounds with this small javascript library.</p>
+      <p class="lead-button">
+        <a href="#" id="examples-btn" class="btn btn-lg btn-secondary">EXAMPLES</a>
+        <a href="#" class="btn btn-lg btn-secondary">API</a>
+      </p>
+    </main>
+  </div>
+
+  <canvas id='canvas'></canvas>
+
+  <!-- include my library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/7.1.0/math.min.js"
+    integrity="sha512-rCvDXOM8HOkDDjC0l9vQPhUg2n0rKlcsCtDjWG0ajYmVfjgtO6egt/RdSbKSzFCIUaE/OQRwmiU/4PmOeK3J+Q=="
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="./../js/utils.js"></script>
+  <script type="text/javascript" src="./../js/Shape.js"></script>
+  <script type="text/javascript" src="./script.js"></script>
+</body>
+
+</html>

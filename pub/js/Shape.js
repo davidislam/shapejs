@@ -508,7 +508,7 @@ class _Shape {
     this.colour = options.colour || "rgb(0,0,0)";
     this.x = options.x || 0;
     this.y = options.y || 0;
-    this.stroke = options.stroke ? options.stroke : false;
+    this.stroke = options.stroke ? options.stroke : true;
     this.isFilled = options.filled === undefined ? true : options.filled;
     this.animated = options.animated === undefined ? false : options.animated;
     this.interactive = options.interactive === undefined ? false : options.interactive;
@@ -645,11 +645,11 @@ class Circle extends _Shape {
   /* Updates the position of this circle, taking into account the boundaries */
   _updatePosition() {
     // Check walls
-    if (this.x + this.curRadius * 2 > this.canvas.width || this.x - this.curRadius * 2 < 0) {
+    if (this.x + this.curRadius > this.canvas.width || this.x - this.curRadius < 0) {
       // Switch directions
       this.dx = -this.dx;
     }
-    if (this.y + this.curRadius * 2 > this.canvas.height || this.y - this.curRadius * 2 < 0) {
+    if (this.y + this.curRadius > this.canvas.height || this.y - this.curRadius < 0) {
       this.dy = -this.dy;
     }
 
