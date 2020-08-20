@@ -131,7 +131,8 @@
         rariSeatOrange: ["#031226", "#2E4159", "#64758C", "#B0C1D9", "#E38F4C"],
         colors02: ["#3F8EBF", "#042F40", "#167362", "#F2A20C", "#D90404"],
         colorThemesky: ["#00020D", "#242B40", "#101726", "#4F5F73", "#8195A6"],
-        colourful: ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
+        colourful: ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'],
+        fogUnderWhiteSky: ['#2F5373', '#E4EBF2', '#0A1B26', '#122E40', '#4A738C']
       }
 
       this._addWindowResizeEventListener();
@@ -281,7 +282,7 @@
     /* Generates circles that follow the mouse cursor */
     generateFollowingCircles(options) {
       this.circles = [];
-      let { n, colours, maxRadius, range, shrinkRate, growRate } = options;
+      let { n, colours, maxRadius, range, shrinkRate, growRate, stroke } = options;
       maxRadius = maxRadius ? maxRadius : this.MAX_RADIUS;
       range = range ? range : this.RANGE;
       shrinkRate = shrinkRate ? shrinkRate : 0.1;
@@ -294,7 +295,7 @@
         const dx = (Math.random() * 0.2) - 0.1;
         const dy = (Math.random() * 0.2) - 0.1;
         const colour = randomColour(colours);
-        this.makeCircle({ x, y, dx, dy, radius, colour, shrinkRadius, maxRadius, shrinkRate, growRate, fp: true, animated: true });
+        this.makeCircle({ x, y, dx, dy, radius, colour, shrinkRadius, maxRadius, shrinkRate, growRate, fp: true, animated: true, stroke });
       }
       this._addMouseMoveEventListener(range);
       this.animateCircles();
@@ -599,7 +600,7 @@
       this.colour = options.colour || "rgb(0,0,0)";
       this.x = options.x || 0;
       this.y = options.y || 0;
-      this.stroke = options.stroke !== undefined ? options.stroke : false;
+      this.stroke = options.stroke !== undefined ? options.stroke : true;
       this.isFilled = options.filled === undefined ? true : options.filled;
       this.animated = options.animated === undefined ? false : options.animated;
       this.interactive = options.interactive === undefined ? false : options.interactive;
@@ -629,7 +630,7 @@
     constructor(options, ctx, canvas) {
       super(options, ctx, canvas);
       this.radius = options.radius === undefined ? 50 : options.radius;
-      this.curRadius = options.radius ? options.radius : 50; // X
+      this.curRadius = options.radius !== undefined ? options.radius : 50;
       this.originalRadius = options.radius === undefined ? 50 : options.radius;
       this.minRadius = options.shrinkRadius === undefined ? 5 : options.shrinkRadius;
       this.maxRadius = options.maxRadius;

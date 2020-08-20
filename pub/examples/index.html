@@ -12,28 +12,51 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
+  <link rel="stylesheet" href="prism.css" />
   <link rel="stylesheet" href="styles.css">
+
 </head>
 
-<body class="text-center">
+<body class="language-js">
 
-  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-    <header class="masthead">
-      <div class="inner">
-        <nav class="nav nav-masthead justify-content-center">
-          <a class="nav-link" href="#">Home</a>
-          <a class="nav-link active" href="#">Examples</a>
-          <a class="nav-link" href="#">API</a>
-        </nav>
-      </div>
-    </header>
-
-    <h2>Title</h2>
-    <canvas id="canvas-fp"></canvas>
-    <h2>Code</h2>
-
-
+  <div id='example-1' class='example'>
+    <h1>Generate following particles</h1>
+    <p>Random decaying particles which follow the mouse cursor.</p>
+    <canvas id="canvas-1" width='800px' height='400px'></canvas>
+    <div class="code">
+      <pre>
+        <code >
+          const shapeInstance = new Shape('canvas');
+          shapeInstance.generateFollowingCircles({
+            n: 1000,
+            maxRadius: 50,
+            colours: shapeInstance.colours.fogUnderWhiteSky,
+          })
+        </code>
+      </pre>
+    </div>
   </div>
+
+  <div id='example-2' class='example'>
+    <h1>Generate bouncing balls</h1>
+    <p>Random bouncing circles which simulate the effect of gravity.</p>
+    <p>Click on the canvas to restart the animation.</p>
+    <canvas id="canvas-2" width='800px' height='400px'></canvas>
+    <div class="code">
+      <pre>
+        <code >
+          const shapeInstance = new Shape('canvas');
+          shapeInstance.generateBouncingCircles({
+            n: 150,
+            minRadius: 10,
+            maxRadius: 20,
+            colours: shapeInstance.colours.colors02
+          })
+        </code>
+      </pre>
+    </div>
+  </div>
+
 
   <!-- include my library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/7.1.0/math.min.js"
@@ -41,6 +64,8 @@
     crossorigin="anonymous"></script>
   <script type="text/javascript" src="./../js/Shape.js"></script>
   <script type="text/javascript" src="./script.js"></script>
+
+  <script src="prism.js"></script>
 </body>
 
 </html>

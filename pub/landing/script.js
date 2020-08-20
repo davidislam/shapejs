@@ -6,5 +6,4 @@ shapeInstance.generateAnimatedCircles({
   speed: 0.2,
   maxRadius: 50,
   minRadius: 25,
-  stroke: true
 })
