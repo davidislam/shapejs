@@ -1,0 +1,1 @@
+// const shapeInstance = new Shape()
