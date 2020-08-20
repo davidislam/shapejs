@@ -81,7 +81,7 @@ class Shape {
   /* A helper function used to create random circles given some options, optionally drawing them
   on the canvas. This can be used to create static, animated, or even interactive circles. */
   _createRandomCircles(options, draw = false, animated = false, interactive = false) {
-    let { n, maxRadius, minRadius, shrinkRadius, filled, colours, speed, shrinkRate, growRate } = options;
+    let { n, stroke, maxRadius, minRadius, shrinkRadius, filled, colours, speed, shrinkRate, growRate } = options;
     // Set optional params
     maxRadius = maxRadius === undefined ? this.MAX_RADIUS : maxRadius;
     minRadius = minRadius === undefined ? this.MIN_RADIUS : minRadius;
@@ -105,7 +105,7 @@ class Shape {
       // Colour
       const circleColour = colours === undefined ? randomRGBAColour() : randomColour(colours);
       // Make new circle
-      const newCircle = this.makeCircle({ x, y, radius: circleRadius, filled, dx, dy, colour: circleColour, shrinkRate, growRate, shrinkRadius, interactive, animated });
+      const newCircle = this.makeCircle({ x, y, stroke, radius: circleRadius, filled, dx, dy, colour: circleColour, shrinkRate, growRate, shrinkRadius, interactive, animated });
       if (draw) {
         newCircle.draw();
       }
@@ -508,7 +508,7 @@ class _Shape {
     this.colour = options.colour || "rgb(0,0,0)";
     this.x = options.x || 0;
     this.y = options.y || 0;
-    this.stroke = options.stroke ? options.stroke : true;
+    this.stroke = options.stroke !== undefined ? options.stroke : false;
     this.isFilled = options.filled === undefined ? true : options.filled;
     this.animated = options.animated === undefined ? false : options.animated;
     this.interactive = options.interactive === undefined ? false : options.interactive;
