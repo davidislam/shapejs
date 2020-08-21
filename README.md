@@ -8,7 +8,7 @@ My landing page
 
 Download [Shape.js](https://github.com/csc309-summer-2020/js-library-islamdav/tree/master/pub/js).
 
-`generateJuliaFractals` method requires [mathjs](https://mathjs.org/).
+**Note**: `generateJuliaFractals` method requires [mathjs](https://mathjs.org/).
 
 ## Basic Usage
 
