@@ -1,9 +1,9 @@
 const shapeInstance = new Shape('canvas');
 shapeInstance.fitCanvasToScreen();
 shapeInstance.generateAnimatedCircles({
-  n: 100,
+  n: 250,
   colours: shapeInstance.colours.colorThemesky,
   speed: 0.2,
-  maxRadius: 50,
+  maxRadius: 100,
   minRadius: 25,
 })

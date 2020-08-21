@@ -7,8 +7,13 @@ shapeInstance1.generateFollowingCircles({
 
 const shapeInstance2 = new Shape('canvas-2');
 shapeInstance2.generateBouncingCircles({
-  n: 150,
+  n: 100,
   minRadius: 10,
   maxRadius: 20,
   colours: shapeInstance2.colours.colors02
+})
+
+const shapeInstance3 = new Shape('canvas-3');
+shapeInstance3.generateJuliaFractals({
+
 })

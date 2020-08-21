@@ -137,6 +137,10 @@
 
       this._addWindowResizeEventListener();
 
+      window.addEventListener('scroll', () => {
+        this._rect = this.canvas.getBoundingClientRect();
+      })
+
       // Remove mouse position periodically
       setInterval(() => {
         this.mouse.x = undefined,
@@ -207,18 +211,22 @@
     /* A helper used to create random circles for gravity simulations */
     _createRandomCircles2(options) {
       this.circles = [];
-      let { n, colours, minRadius, maxRadius, acceleration, friction } = options;
+      let { n, colours, minRadius, maxRadius, acceleration, friction, dx, dy } = options;
       minRadius = minRadius ? minRadius : this.MIN_RADIUS;
       maxRadius = maxRadius ? maxRadius : this.MAX_RADIUS;
+      dx = dx === undefined ? 2 : dx;
+      dy = dy === undefined ? 5 : dy;
+
       for (let i = 0; i < n; i++) {
         const radius = randomIntFromRange(minRadius, maxRadius);
         const x = randomIntFromRange(radius, this.canvas.width - radius);
         const y = randomIntFromRange(0, this.canvas.height / 2);
         const colour = randomColour(colours);
-        const dx = randomIntFromRange(-2, 2);
-        const dy = randomIntFromRange(-2, 2);
-        this.makeCircle({ x, y, dx, dy, colour, radius, gravity: true, acceleration, friction })
+        const dx_ = randomIntFromRange(-dx, dx);
+        const dy_ = randomIntFromRange(-dy, dy);
+        this.makeCircle({ x, y, dx: dx_, dy: dy_, colour, radius, gravity: true, acceleration, friction })
       }
+
     }
 
     /* Generates n random bouncing circles with gravity */
@@ -429,12 +437,7 @@
       function pointToColor(point) {
         const iterations = julia(point);
         const percentage = iterations / _maxIterations;
-        // point = point.sub(constant);
-        // const red = percentage * 255;
-        // const green = percentage * 255;
-        // const blue = percentage * 255;
         return `hsl(${_hue},100%,${percentage * 100}%)`;
-        // return `rgb(${red}, ${green}, ${blue})`;
       }
 
       // Turn XY pixel coordinates into a point on the complex plane

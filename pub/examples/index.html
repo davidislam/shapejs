@@ -47,11 +47,42 @@
         <code >
           const shapeInstance = new Shape('canvas');
           shapeInstance.generateBouncingCircles({
-            n: 150,
+            n: 100,
             minRadius: 10,
             maxRadius: 20,
             colours: shapeInstance.colours.colors02
           })
+        </code>
+      </pre>
+    </div>
+  </div>
+
+
+  <div id='example-3' class='example'>
+    <h1>Generate Julia Fractals</h1>
+    <p>Find an interesting frame by moving your cursor slowly.</p>
+    <p>Click once to freeze the frame. Click again to zoom in.</p>
+    <canvas id="canvas-3" width='200px' height='200px'></canvas>
+    <div class="code">
+      <pre>
+        <code >
+          const shapeInstance = new Shape('canvas');
+          shapeInstance.generateJuliaFractals()
+        </code>
+      </pre>
+    </div>
+  </div>
+
+  <div id='example-3' class='example'>
+    <h1>Generate Mandelbrotset Fractals</h1>
+    <p>Find an interesting frame by moving your cursor slowly.</p>
+    <p>Click once to freeze the frame. Click again to zoom in.</p>
+    <canvas id="canvas-3" width='200px' height='200px'></canvas>
+    <div class="code">
+      <pre>
+        <code >
+          const shapeInstance = new Shape('canvas');
+          shapeInstance.generateJuliaFractals()
         </code>
       </pre>
     </div>
