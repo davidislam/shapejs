@@ -551,8 +551,8 @@
 
       function julia(z, i = 0) {
         // Apply formula
-        z = z.mul(z);
-        z = z.add(constant);
+        z = z.mul(z); // Mathjs library
+        z = z.add(constant); // Mathjs library
         if (math.abs(z) > 2 || i == _maxIterations)
           return i;
         return julia(z, i + 1);
@@ -571,9 +571,9 @@
         const zx = (x / width) * 2 - 1
         const zy = 1 - (y / height) * 2
 
-        let z = math.complex(zx, zy);
-        z = z.div(zoom);
-        z = z.add(pan);
+        let z = math.complex(zx, zy); // Mathjs library
+        z = z.div(zoom); // Mathjs library
+        z = z.add(pan); // Mathjs library
 
         // Create a complex number based on our new XY values
         return z
@@ -621,8 +621,8 @@
         constant = pixelToPoint(Shape.mouse.x, Shape.mouse.y);
 
         // Round that point off to the nearest 0.01
-        constant.re = math.round(constant.re * 100) / 100;
-        constant.im = math.round(constant.im * 100) / 100;
+        constant.re = math.round(constant.re * 100) / 100; // Mathjs library
+        constant.im = math.round(constant.im * 100) / 100; // Mathjs library
         update();
       }
 
