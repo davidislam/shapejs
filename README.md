@@ -1,6 +1,6 @@
 # Landing Page
 
-[My landing page](https://ancient-castle-97858.herokuapp.com/)
+[My landing page](https://ancient-castle-97858.herokuapp.com/landing)
 
 # Getting Started
 

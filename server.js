@@ -1,6 +1,6 @@
 'use strict';
 const log = console.log
-const path = require('path');
+log('Express server')
 
 const express = require('express');
 const app = express();
@@ -8,7 +8,7 @@ const app = express();
 app.use(express.static(__dirname + '/pub'));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/pub/landing/index.html'));
+  res.send('<h1>Hello world</h1>')
 })
 
 const port = process.env.PORT || 5000
