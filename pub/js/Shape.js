@@ -172,6 +172,11 @@
     /* Generates random static circles given the properties in <options> */
     generateCircles(options) {
       this._createRandomCircles(options, true);
+      this.canvas.addEventListener('click', () => {
+        this.clearCanvas();
+        this.circles = [];
+        this._createRandomCircles(options, true);
+      })
     }
 
     /* A helper function used to create random circles given some options, optionally drawing them
@@ -206,6 +211,8 @@
           newCircle.draw();
         }
       }
+      // console.log(this.circles);
+      // debugger;
     }
 
     /* A helper used to create random circles for gravity simulations */
@@ -215,7 +222,7 @@
       minRadius = minRadius ? minRadius : this.MIN_RADIUS;
       maxRadius = maxRadius ? maxRadius : this.MAX_RADIUS;
       dx = dx === undefined ? 2 : dx;
-      dy = dy === undefined ? 5 : dy;
+      dy = dy === undefined ? 10 : dy;
 
       for (let i = 0; i < n; i++) {
         const radius = randomIntFromRange(minRadius, maxRadius);
@@ -318,10 +325,15 @@
     /* Generates n random static rectangles */
     generateRectangles(options) {
       this._createRandomRectangles(options, true);
+      this.canvas.addEventListener('click', () => {
+        this._createRandomRectangles(options, true);
+      })
     }
 
     /* A helper function used to create random static rectangles given some options */
     _createRandomRectangles(options, draw = false) {
+      this.rectangles = [];
+      this.clearCanvas();
       let { n, filled, colours, maxWidth, maxHeight, minWidth, minHeight } = options;
       // Set optional params
       filled = filled === undefined ? true : filled;
@@ -332,9 +344,9 @@
 
       for (let i = 0; i < n; i++) {
         const x = Math.random() * this.canvas.width;
-        const y = Math.random() * this.canvas.height;
+        const height = (Math.random() * (maxHeight - minHeight)) + minHeight;
+        const y = this.canvas.height - height;
         const width = Math.random() * (maxWidth - minWidth) + minWidth;
-        const height = Math.random() * (maxHeight - minHeight) + minHeight;
         const rectColour = colours === undefined ? randomRGBAColour() : randomColour(colours);
         const rect = this.makeRectangle({ x, y, width, height, colour: rectColour, filled })
         if (draw) {
@@ -367,7 +379,7 @@
 
     /* A helper method that creates random rectangles of the same width whose base is at the bottom of the canvas */
     _createRectanglesFixedToBottom(options) {
-      let { n, colours, minHeight, maxHeight, compressedHeight, speed } = options;
+      let { n, colours, minHeight, maxHeight, compressedHeight, speed, stroke } = options;
       // Set optional params
       minHeight = minHeight === undefined ? this.MIN_HEIGHT : minHeight;
       maxHeight = maxHeight === undefined ? this.MAX_HEIGHT : maxHeight;
@@ -382,7 +394,7 @@
         const height = (Math.random() * (maxHeight - minHeight)) + minHeight;
         const y = this.canvas.height - height;
         const colour = colours === undefined ? randomRGBAColour() : randomColour(colours);
-        this.makeRectangle({ x, y, width, height, minHeight: compressedHeight, colour, filled, speed });
+        this.makeRectangle({ x, y, width, height, minHeight: compressedHeight, colour, filled, speed, stroke });
       }
     }
 
@@ -512,7 +524,6 @@
       const { zoomFactor, maxIterations, hue } = options;
       const Shape = this; // bound this
       // Initialize params
-      // TODO: These depend on canvas size
       let zoom = 150;
       let panX = 1.5;
       let panY = 1.2;
@@ -697,9 +708,12 @@
     draw2() {
       const ctx = this.ctx;
       this._drawCircle();
+      ctx.save();
       ctx.globalAlpha = this.opacity;
       ctx.fillStyle = this.colour;
       ctx.fill();
+      ctx.restore();
+      ctx.stroke();
       ctx.closePath();
     }
 
@@ -832,6 +846,9 @@
 
     fill() {
       this.ctx.fillStyle = this.colour;
+      if (this.stroke) {
+        this.ctx.strokeRect(this.x, this.y, this.width, this.curHeight);
+      }
       this.ctx.fillRect(this.x, this.y, this.width, this.curHeight);
     }
 

@@ -19,6 +19,16 @@
 
 <body class="language-js">
 
+  <header class="masthead">
+    <div class="inner">
+      <nav class="nav nav-masthead justify-content-center">
+        <a class="nav-link" href="./../landing/index.html">Home</a>
+        <a class="nav-link active" href="#">Examples</a>
+        <a class="nav-link" href="./../documentation/index.html">API</a>
+      </nav>
+    </div>
+  </header>
+
   <div id='example-1' class='example'>
     <h1>Generate following particles</h1>
     <p>Random decaying particles which follow the mouse cursor.</p>
@@ -60,7 +70,7 @@
 
   <div id='example-3' class='example'>
     <h1>Generate Julia Fractals</h1>
-    <p>Find an interesting frame by moving your cursor slowly.</p>
+    <p>Find an interesting frame by moving your mouse cursor slowly.</p>
     <p>Click once to freeze the frame. Click again to zoom in.</p>
     <canvas id="canvas-3" width='200px' height='200px'></canvas>
     <div class="code">
@@ -73,16 +83,116 @@
     </div>
   </div>
 
-  <div id='example-3' class='example'>
+  <div id='example-4' class='example'>
     <h1>Generate Mandelbrotset Fractals</h1>
-    <p>Find an interesting frame by moving your cursor slowly.</p>
-    <p>Click once to freeze the frame. Click again to zoom in.</p>
-    <canvas id="canvas-3" width='200px' height='200px'></canvas>
+    <p>Click to zoom in. Shift-click to pan. Alt-click to zoom out.</p>
+    <canvas id="canvas-4" width='400px' height='400px'></canvas>
     <div class="code">
       <pre>
         <code >
           const shapeInstance = new Shape('canvas');
-          shapeInstance.generateJuliaFractals()
+          shapeInstance.generateMandelbrotSetFractals({
+            maxIterations: 500
+          })
+        </code>
+      </pre>
+    </div>
+  </div>
+
+  <div id='example-5' class='example'>
+    <h1>Generate Amplifying Rectangles</h1>
+    <p>Rectangles respond to your mouse cursor.</p>
+    <canvas id="canvas-5" width='800px' height='400px'></canvas>
+    <div class="code">
+      <pre>
+        <code >
+          const shapeInstance = new Shape('canvas');
+          shapeInstance.generateAmplifyingRectangles({
+            n: 25,
+            colours: shapeInstance.colours.rariSeatOrange,
+            minHeight: 150,
+            maxHeight: 350
+          })
+        </code>
+      </pre>
+    </div>
+  </div>
+
+  <div id='example-6' class='example'>
+    <h1>Generate Colliding Particles</h1>
+    <p>Hovering over them reveals their true colour. Try it!</p>
+    <canvas id="canvas-6" width='800px' height='400px'></canvas>
+    <div class="code">
+      <pre>
+        <code >
+          const shapeInstance = new Shape('canvas');
+          shapeInstance.generateCollidingCircles({
+            n: 100,
+            radius: 10,
+            colours: shapeInstance.colours.colourful,
+            range: 120,
+            speed: 3
+          })
+        </code>
+      </pre>
+    </div>
+  </div>
+
+  <div id='example-7' class='example'>
+    <h1>Generate Moving Shrinking Circles</h1>
+    <p>Hovering over circles causes them to shrink. Try it!</p>
+    <canvas id="canvas-7" width='800px' height='400px'></canvas>
+    <div class="code">
+      <pre>
+        <code >
+          const shapeInstance = new Shape('canvas');
+          shapeInstance.generateInteractiveCircles({
+            n: 250,
+            colours: shapeInstance.colours.colorThemesky,
+            animated: true,
+            speed: 0.2,
+            range: 100
+          })
+        </code>
+      </pre>
+    </div>
+  </div>
+
+  <div id='example-8' class='example'>
+    <h1>Generate Static Circles</h1>
+    <p>Could be your next wallpaper!</p>
+    <p>Click to regenerate.</p>
+    <canvas id="canvas-8" width='800px' height='400px'></canvas>
+    <div class="code">
+      <pre>
+        <code >
+          const shapeInstance = new Shape('canvas');
+          shapeInstance.generateCircles({
+            n: 200,
+            colours: shapeInstance.colours.fogUnderWhiteSky
+          })
+        </code>
+      </pre>
+    </div>
+  </div>
+
+  <div id='example-9' class='example'>
+    <h1>Generate Rectangles</h1>
+    <p>More wallpaper options :)</p>
+    <p>Click to regenerate.</p>
+    <canvas id="canvas-9" width='800px' height='400px'></canvas>
+    <div class="code">
+      <pre>
+        <code >
+          const shapeInstance = new Shape('canvas');
+          shapeInstance.generateRectangles({
+            n: 200,
+            colours: shapeInstance.colours.rariSeatOrange,
+            maxWidth: 150,
+            minWidth: 50,
+            maxHeight: 425,
+            minHeight: 100
+          })
         </code>
       </pre>
     </div>
