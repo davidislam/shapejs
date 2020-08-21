@@ -92,10 +92,17 @@
     }
   }
 
-  /* The main entry point to the library */
+  /**
+   * Class representing this library
+   */
   class Shape {
-
-    /* Constructs a new instance of this library using the canvas with id <canvasID> */
+    /**
+     * Constructs a new instance of this library 
+     * @param {string} canvasID - The id of the canvas
+     * @returns {Object} - A shape object
+     * @example 
+     * const shapeInstance = new Shape('canvas');
+     */
     constructor(canvasID) {
       this.canvas = document.querySelector(`#${canvasID}`);
       this.context = this.canvas.getContext("2d");
@@ -116,6 +123,7 @@
       this.SHRINK_RATE = 3;
       this.GROW_RATE = 3;
 
+      // Mouse
       this.RANGE = 50;
 
       // Rectangle
@@ -126,7 +134,6 @@
       this.COMPRESSED_HEIGHT = this.canvas.height * 0.10;
       this.AMP_SPEED = 25;
 
-      // Colours
       this.colours = {
         rariSeatOrange: ["#031226", "#2E4159", "#64758C", "#B0C1D9", "#E38F4C"],
         colors02: ["#3F8EBF", "#042F40", "#167362", "#F2A20C", "#D90404"],
@@ -135,8 +142,9 @@
         fogUnderWhiteSky: ['#2F5373', '#E4EBF2', '#0A1B26', '#122E40', '#4A738C']
       }
 
-      this._addWindowResizeEventListener();
-
+      window.addEventListener('resize', () => {
+        this._rect = this.canvas.getBoundingClientRect();
+      })
       window.addEventListener('scroll', () => {
         this._rect = this.canvas.getBoundingClientRect();
       })
@@ -148,21 +156,57 @@
       }, 1000);
     }
 
-    /* Creates and returns a new rectangle instance given the properties in <options> */
+    /**
+     * Construct a rectangle object and add it to the rectangles array
+     * @param {Object} options - The properties of this rectangle
+     * @param {string} [options.colour='rgb(0,0,0)'] - The colour
+     * @param {number} [options.x=0] - The x coordinate of the top-left corner
+     * @param {number} [options.y=0] - The y coordinate of the top-left corner
+     * @param {number} [options.width=100] - The width
+     * @param {number} [options.height=100] - The height
+     * @param {boolean} [options.stroke=true] - Whether or not the rectangle is outlined
+     * @param {boolean} [options.filled=true] - Whether or not the rectangle is filled
+     * @example 
+     * shapeInstance.makeRectangle({
+     *  colour: 'blue',
+     *  x: 100,
+     *  y: 100
+     * }).draw()
+     * @returns {Rectangle} - A rectangle object
+     */
     makeRectangle(options) {
       const newRect = new Rectangle(options, this.context, this.canvas);
       this.rectangles.push(newRect);
       return newRect;
     }
 
-    /* Creates and returns a new circle instance given the properties in <options> */
+    /**
+     * Construct a circle object and add it to the circles array
+     * @param {Object} options - The properties of this circle
+     * @param {number} [options.radius=50] - The radius
+     * @param {string} [options.colour='rgb(0,0,0)'] - The colour
+     * @param {number} [options.x=0] - The x coordinate of the circle's centre
+     * @param {number} [options.y=0] - The y coordinate of the circle's centre
+     * @param {boolean} [options.stroke=true] - Whether or not the circle is outlined
+     * @param {boolean} [options.filled=true] - Whether or not the circle is filled
+     * @example
+     * shapeInstance.makeCircle({
+     *  colour: 'blue',
+     *  radius: 100,
+     *  x: 250,
+     *  y: 250
+     * }).draw()
+     * @return {Circle} - A circle object
+     */
     makeCircle(options) {
       const newCircle = new Circle(options, this.context, this.canvas);
       this.circles.push(newCircle);
       return newCircle;
     }
 
-    /* Fits canvas to the screen */
+    /**
+     * Fits canvas to the screen
+     */
     fitCanvasToScreen() {
       this.canvas.width = window.innerWidth;
       this.canvas.height = window.innerHeight;
@@ -178,6 +222,11 @@
      * @param {number} [options.maxRadius=100] - The maximum radius
      * @param {boolean} [options.filled=true] - Whether or not the circles are filled
      * @param {string[]} options.colours - The colours the circles take on
+     * @example 
+     * shapeInstance.generateCircles({
+     *  n: 200,
+     *  colours: shapeInstance.colours.fogUnderWhiteSky
+     * })
      */
     generateCircles(options) {
       this._createRandomCircles(options, true);
@@ -220,14 +269,11 @@
           newCircle.draw();
         }
       }
-      // console.log(this.circles);
-      // debugger;
     }
 
     /* A helper used to create random circles for gravity simulations */
     _createRandomCircles2(options) {
-      this.circles = [];
-      let { n, colours, minRadius, maxRadius, acceleration, friction, dx, dy } = options;
+      let { n, filled, stroke, colours, minRadius, maxRadius, acceleration, friction, dx, dy } = options;
       minRadius = minRadius ? minRadius : this.MIN_RADIUS;
       maxRadius = maxRadius ? maxRadius : this.MAX_RADIUS;
       dx = dx === undefined ? 2 : dx;
@@ -240,25 +286,92 @@
         const colour = randomColour(colours);
         const dx_ = randomIntFromRange(-dx, dx);
         const dy_ = randomIntFromRange(-dy, dy);
-        this.makeCircle({ x, y, dx: dx_, dy: dy_, colour, radius, gravity: true, acceleration, friction })
+        this.makeCircle({ x, y, dx: dx_, dy: dy_, colour, radius, filled, gravity: true, acceleration, friction, stroke })
       }
 
     }
 
-    /* Generates n random bouncing circles with gravity */
+
+    /**
+     * Generates bouncing circles
+     * @param {Object} options 
+     * @param {integer} options.n - The number of circles
+     * @param {String[]} options.colours - The colours
+     * @param {boolean} [options.stroke=true] - Whether or not the circle is outlined
+     * @param {boolean} [options.filled=true] - Whether or not the circle is filled
+     * @param {number} [options.minRadius=5] - The minimum radius
+     * @param {number} [options.maxRadius=100] - The maximum radius
+     * @param {number} [options.acceleration=0.5] - The rate of acceleration
+     * @param {number} [options.friction=0.95] - Friction
+     * @param {number} [options.dx=2] - Velocity in the x direction
+     * @param {number} [options.dy=10] - Velocity in the y direction
+     * @example
+     *   shapeInstance.generateBouncingCircles({
+     *    n: 100,
+     *    minRadius: 10,
+     *    maxRadius: 20,
+     *    colours: shapeInstance.colours.colors02
+     *   })
+     */
     generateBouncingCircles(options) {
       this._createRandomCircles2(options);
-      this.canvas.addEventListener('click', () => this._createRandomCircles2(options))
+      this.canvas.addEventListener('click', () => {
+        this.circles = [];
+        this.clearCanvas();
+        this._createRandomCircles2(options)
+      })
       this.animateCircles();
     }
 
-    /* Generates n random animated circles */
+
+    /**
+     * Generates animated circles
+     * @param {Object} options 
+     * @param {integer} options.n - The number of circles
+     * @param {String[]} options.colours - The colours
+     * @param {boolean} [options.stroke=true] - Whether or not the circle is outlined
+     * @param {boolean} [options.filled=true] - Whether or not the circle is filled
+     * @param {number} [options.minRadius=5] - The minimum radius
+     * @param {number} [options.maxRadius=100] - The maximum radius
+     * @param {number} [options.speed=1] - The rate of motion
+     * @example
+     * shapeInstance.generateAnimatedCircles({
+     *  n: 250,
+     *  colours: shapeInstance.colours.colorThemesky,
+     *  speed: 0.2,
+     *  maxRadius: 100,
+     *  minRadius: 25
+     * })
+     */
     generateAnimatedCircles(options) {
       this._createRandomCircles(options, false, true);
       this.animateCircles();
     }
 
-    /* Generates random static or animated circles with interactivity */
+    /**
+     * Generates static or animated circles with interactivity
+     * @param {Object} options 
+     * @param {integer} options.n - The number of circles
+     * @param {String[]} options.colours - The colours
+     * @param {boolean} [options.stroke=true] - Whether or not the circle is outlined
+     * @param {boolean} [options.filled=true] - Whether or not the circle is filled
+     * @param {number} [options.minRadius=5] - The minimum radius
+     * @param {number} [options.maxRadius=100] - The maximum radius
+     * @param {number} [options.speed=1] - The rate of motion
+     * @param {boolean} options.animated 
+     * @param {number} [options.shrinkRadius=5] - How small will the circles get upon being hovered on
+     * @param {number} [options.shrinkRate=3] - The rate of shrinking
+     * @param {number} [options.growRate=3] - The rate of growth
+     * @param {range} [options.range=50] - The mouse's range on the circles
+     * @example
+     * shapeInstance.generateInteractiveCircles({
+     *  n: 250,
+     *  colours: shapeInstance.colours.colorThemesky,
+     *  animated: true,
+     *  speed: 0.2,
+     *  range: 100
+     *  })
+     */
     generateInteractiveCircles(options) {
       const { animated, range } = options;
       // Keep track of the mouse's position
@@ -267,7 +380,24 @@
       this.animateCircles();
     }
 
-    /* Generates colliding circles with mouse interactivity */
+
+    /**
+     * Generates colliding particles with mouse interactivity
+     * @param {Object} options 
+     * @param {integer} options.n - The number of circles
+     * @param {String[]} options.colours - The colours
+     * @param {number} options.radius 
+     * @param {number} [options.speed=1] - The rate of motion
+     * @param {range} [options.range=50] - The mouse's range on the circles
+     * @example
+     * shapeInstance.generateCollidingCircles({
+     *  n: 100,
+     *  radius: 10,
+     *  colours: shapeInstance.colours.colourful,
+     *  speed: 3,
+     *  range: 120
+     *  })
+     */
     generateCollidingCircles(options) {
       this.circles = [];
       let { n, radius, colours, speed, range } = options;
@@ -303,7 +433,24 @@
       this.animateCircles();
     }
 
-    /* Generates circles that follow the mouse cursor */
+
+    /**
+     * Generates decaying particles that follow the mouse cursor around
+     * @param {Object} options 
+     * @param {integer} options.n - The number of circles
+     * @param {String[]} options.colours - The colours
+     * @param {boolean} [options.stroke=true] - Whether or not the circle is outlined
+     * @param {number} [options.maxRadius=100] - The maximum radius
+     * @param {number} [options.shrinkRate=3] - The rate of shrinking
+     * @param {number} [options.growRate=3] - The rate of growth
+     * @param {range} [options.range=50] - The mouse's range on the circles
+     * @example
+     * shapeInstance.generateFollowingCircles({
+     *  n: 1000,
+     *  maxRadius: 50,
+     *  colours: shapeInstance.colours.fogUnderWhiteSky
+     * })
+     */
     generateFollowingCircles(options) {
       this.circles = [];
       let { n, colours, maxRadius, range, shrinkRate, growRate, stroke } = options;
@@ -325,25 +472,39 @@
       this.animateCircles();
     }
 
-    _addWindowResizeEventListener() {
-      window.addEventListener('resize', () => {
-        this._rect = this.canvas.getBoundingClientRect();
-      })
-    }
-
-    /* Generates n random static rectangles */
+    /**
+     * Generates static rectangles
+     * @param {Object} options 
+     * @param {integer} options.n - The number of rectangles to generate
+     * @param {string[]} [options.colours=randomRGBAColour()]
+     * @param {number} [options.minWidth=this.MIN_WIDTH] 
+     * @param {number} [options.maxWidth=this.MAX_WIDTH]
+     * @param {number} [options.minHeight=this.MIN_HEIGHT] 
+     * @param {number} [options.maxHeight=this.MAX_HEIGHT]
+     * @param {boolean} [options.stroke=true] - Whether or not the rectangle is outlined
+     * @param {boolean} [options.filled=true] - Whether or not the rectangle is filled
+     * @example
+     * shapeInstance.generateRectangles({
+     *  n: 200,
+     *  colours: shapeInstance.colours.rariSeatOrange,
+     *  maxWidth: 150,
+     *  minWidth: 50,
+     *  maxHeight: 425,
+     *  minHeight: 100
+     * })
+     */
     generateRectangles(options) {
       this._createRandomRectangles(options, true);
       this.canvas.addEventListener('click', () => {
+        this.rectangles = [];
+        this.clearCanvas();
         this._createRandomRectangles(options, true);
       })
     }
 
     /* A helper function used to create random static rectangles given some options */
     _createRandomRectangles(options, draw = false) {
-      this.rectangles = [];
-      this.clearCanvas();
-      let { n, filled, colours, maxWidth, maxHeight, minWidth, minHeight } = options;
+      let { n, filled, stroke, colours, maxWidth, maxHeight, minWidth, minHeight } = options;
       // Set optional params
       filled = filled === undefined ? true : filled;
       maxWidth = maxWidth === undefined ? this.MAX_WIDTH : maxWidth;
@@ -357,7 +518,7 @@
         const y = this.canvas.height - height;
         const width = Math.random() * (maxWidth - minWidth) + minWidth;
         const rectColour = colours === undefined ? randomRGBAColour() : randomColour(colours);
-        const rect = this.makeRectangle({ x, y, width, height, colour: rectColour, filled })
+        const rect = this.makeRectangle({ x, y, stroke, width, height, colour: rectColour, filled })
         if (draw) {
           rect.draw();
         }
@@ -378,7 +539,25 @@
       this.mouse.range = range;
     }
 
-    /* Generates n random amplifying rectangles */
+    /**
+     * Generates amplifying rectangles
+     * @param {Object} options 
+     * @param {integer} options.n - The number of rectangles to generate
+     * @param {string[]} [options.colours=randomRGBAColour()]
+     * @param {number} [options.minHeight=this.MIN_HEIGHT] 
+     * @param {number} [options.maxHeight=this.MAX_HEIGHT]
+     * @param {number} [options.compressedHeight=this.COMPRESSED_HEIGHT] - The compression height
+     * @param {number} [options.speed=this.AMP_SPEED] - The rate at which the rectangles compress
+     * @param {boolean} [options.stroke=true] - Whether or not the rectangle is outlined
+     * @param {number} [options.range=this.RANGE] - The mouse's influence on the rectangles
+     * @example
+     * shapeInstance.generateAmplifyingRectangles({
+     *  n: 25,
+     *  colours: shapeInstance.colours.rariSeatOrange,
+     *  minHeight: 150,
+     *  maxHeight: 350
+     * })
+     */
     generateAmplifyingRectangles(options) {
       const { range } = options;
       this._createRectanglesFixedToBottom(options);
@@ -407,12 +586,17 @@
       }
     }
 
-    /* Clears the canvas */
+    /**
+     * Clears the canvas 
+     */
     clearCanvas() {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    /* Animates all circles in the circles array */
+
+    /**
+     * Animates all circles in the circles array by calling their update method
+     */
     animateCircles() {
       requestAnimationFrame(this.animateCircles.bind(this));
       this.clearCanvas();
@@ -424,14 +608,24 @@
       }));
     }
 
-    /* Animates the rectangles in the rectangles array */
+
+    /**
+     * Animates the rectangles in the rectangles array by calling their update method
+     */
     animateRectangles() {
       requestAnimationFrame(this.animateRectangles.bind(this));
       this.clearCanvas();
       this.rectangles.forEach(rect => rect.update(this.mouse.x, this.mouse.range));
     }
 
-    // This method uses mathjs to work with complex numbers
+    /**
+     * Generate Julia fractals
+     * @param {Object} options 
+     * @param {integer} [options.maxIterations=64] - The level of detail
+     * @param {number} [options.hue=0] - The hue colour value
+     * @example
+     * shapeInstance.generateJuliaFractals()
+     */
     generateJuliaFractals(options = {}) {
       const { maxIterations, hue } = options;
       const Shape = this;
@@ -528,7 +722,17 @@
       update();
     }
 
-    /* Generates Mandelbrotset fractals with mouse interactivity */
+    /**
+     * Generate Mandelbrotset fractals
+     * @param {Object} options 
+     * @param {integer} [options.zoomFactor=150] - How much to zoom in by
+     * @param {integer} [options.maxIterations=150] - The level of detail
+     * @param {number} [options.hue=0] - The hue colour value
+     * @example
+     * shapeInstance.generateMandelbrotSetFractals({
+     *  maxIterations: 500
+     * })
+     */
     generateMandelbrotSetFractals(options) {
       const { zoomFactor, maxIterations, hue } = options;
       const Shape = this; // bound this
@@ -648,8 +852,22 @@
     outline() { }
   }
 
-
+  /**
+   * Class representing a circle.
+   */
   class Circle extends _Shape {
+
+    /**
+     * Construct a circle object
+     * @param {Object} options - The properties of this circle
+     * @param {number} [options.radius=50] - The radius
+     * @param {string} [options.colour='rgb(0,0,0)'] - The colour
+     * @param {number} [options.x=0] - The x coordinate of the circle's centre
+     * @param {number} [options.y=0] - The y coordinate of the circle's centre
+     * @param {boolean} [options.stroke=true] - Whether or not the circle is outlined
+     * @param {boolean} [options.filled=true] - Whether or not the circle is filled
+     * @return {Circle} - A circle object
+     */
     constructor(options, ctx, canvas) {
       super(options, ctx, canvas);
       this.radius = options.radius === undefined ? 50 : options.radius;
@@ -801,7 +1019,11 @@
       }
     }
 
-    /* Simulates the effect of gravity on this ball */
+    /**
+     * Simulates the effect of gravity on this ball
+     * @param {number} [acceleration=1]
+     * @param {number} [friction=0.95]
+     */
     animateWithGravity(acceleration = 1, friction = 0.95) {
       this.gravity = true;
       this.acceleration = acceleration;
@@ -825,7 +1047,10 @@
       this.y += this.dy;
     }
 
-    /* Animates the circle by bouncing it off walls */
+    /**
+     * Animates the circle by bouncing it off walls 
+     * @param {number} speed 
+     */
     animate(speed = 1) {
       this.animated = true;
       this.dx = this.dy = speed;
@@ -842,8 +1067,23 @@
 
   }
 
-
+  /**
+   * Class representing a rectangle.
+   */
   class Rectangle extends _Shape {
+
+    /**
+     * Construct a rectangle object
+     * @param {Object} options - The properties of this rectangle
+     * @param {string} [options.colour='rgb(0,0,0)'] - The colour
+     * @param {number} [options.x=0] - The x coordinate of the top-left corner
+     * @param {number} [options.y=0] - The y coordinate of the top-left corner
+     * @param {number} [options.width=100] - The width
+     * @param {number} [options.height=100] - The height
+     * @param {boolean} [options.stroke=true] - Whether or not the rectangle is outlined
+     * @param {boolean} [options.filled=true] - Whether or not the rectangle is filled
+     * @returns {Rectangle} - A rectangle object
+     */
     constructor(options, ctx, canvas) {
       super(options, ctx, canvas);
       this.width = options.width || 100;

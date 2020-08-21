@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Shape.js</title>
+    <title>JSDoc: Source: shape.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Shape.js</h1>
+    <h1 class="page-title">Source: shape.js</h1>
 
     
 
@@ -26,11 +26,16 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>class Shape {
+            <pre class="prettyprint source linenums"><code>/**
+ * Class representing this library
+ */
+class Shape {
   /**
    * Constructs a new instance of this library 
    * @param {string} canvasID - The id of the canvas
    * @returns {Object} - A shape object
+   * @example 
+   * const shapeInstance = new Shape('canvas');
    */
   constructor(canvasID) {
     this.canvas = document.querySelector(`#${canvasID}`);
@@ -95,6 +100,12 @@
    * @param {number} [options.height=100] - The height
    * @param {boolean} [options.stroke=true] - Whether or not the rectangle is outlined
    * @param {boolean} [options.filled=true] - Whether or not the rectangle is filled
+   * @example 
+   * shapeInstance.makeRectangle({
+   *  colour: 'blue',
+   *  x: 100,
+   *  y: 100
+   * }).draw()
    * @returns {Rectangle} - A rectangle object
    */
   makeRectangle(options) {
@@ -112,6 +123,13 @@
    * @param {number} [options.y=0] - The y coordinate of the circle's centre
    * @param {boolean} [options.stroke=true] - Whether or not the circle is outlined
    * @param {boolean} [options.filled=true] - Whether or not the circle is filled
+   * @example
+   * shapeInstance.makeCircle({
+   *  colour: 'blue',
+   *  radius: 100,
+   *  x: 250,
+   *  y: 250
+   * }).draw()
    * @return {Circle} - A circle object
    */
   makeCircle(options) {
@@ -138,6 +156,11 @@
    * @param {number} [options.maxRadius=100] - The maximum radius
    * @param {boolean} [options.filled=true] - Whether or not the circles are filled
    * @param {string[]} options.colours - The colours the circles take on
+   * @example 
+   * shapeInstance.generateCircles({
+   *  n: 200,
+   *  colours: shapeInstance.colours.fogUnderWhiteSky
+   * })
    */
   generateCircles(options) {
     this._createRandomCircles(options, true);
@@ -216,6 +239,13 @@
    * @param {number} [options.friction=0.95] - Friction
    * @param {number} [options.dx=2] - Velocity in the x direction
    * @param {number} [options.dy=10] - Velocity in the y direction
+   * @example
+   *   shapeInstance.generateBouncingCircles({
+   *    n: 100,
+   *    minRadius: 10,
+   *    maxRadius: 20,
+   *    colours: shapeInstance.colours.colors02
+   *   })
    */
   generateBouncingCircles(options) {
     this._createRandomCircles2(options);
@@ -234,6 +264,14 @@
    * @param {number} [options.minRadius=5] - The minimum radius
    * @param {number} [options.maxRadius=100] - The maximum radius
    * @param {number} [options.speed=1] - The rate of motion
+   * @example
+   * shapeInstance.generateAnimatedCircles({
+   *  n: 250,
+   *  colours: shapeInstance.colours.colorThemesky,
+   *  speed: 0.2,
+   *  maxRadius: 100,
+   *  minRadius: 25
+   * })
    */
   generateAnimatedCircles(options) {
     this._createRandomCircles(options, false, true);
@@ -255,6 +293,14 @@
    * @param {number} [options.shrinkRate=3] - The rate of shrinking
    * @param {number} [options.growRate=3] - The rate of growth
    * @param {range} [options.range=50] - The mouse's range on the circles
+   * @example
+   * shapeInstance.generateInteractiveCircles({
+   *  n: 250,
+   *  colours: shapeInstance.colours.colorThemesky,
+   *  animated: true,
+   *  speed: 0.2,
+   *  range: 100
+   *  })
    */
   generateInteractiveCircles(options) {
     const { animated, range } = options;
@@ -273,6 +319,14 @@
    * @param {number} options.radius 
    * @param {number} [options.speed=1] - The rate of motion
    * @param {range} [options.range=50] - The mouse's range on the circles
+   * @example
+   * shapeInstance.generateCollidingCircles({
+   *  n: 100,
+   *  radius: 10,
+   *  colours: shapeInstance.colours.colourful,
+   *  speed: 3,
+   *  range: 120
+   *  })
    */
   generateCollidingCircles(options) {
     this.circles = [];
@@ -320,6 +374,12 @@
    * @param {number} [options.shrinkRate=3] - The rate of shrinking
    * @param {number} [options.growRate=3] - The rate of growth
    * @param {range} [options.range=50] - The mouse's range on the circles
+   * @example
+   * shapeInstance.generateFollowingCircles({
+   *  n: 1000,
+   *  maxRadius: 50,
+   *  colours: shapeInstance.colours.fogUnderWhiteSky
+   * })
    */
   generateFollowingCircles(options) {
     this.circles = [];
@@ -353,6 +413,15 @@
    * @param {number} [options.maxHeight=this.MAX_HEIGHT]
    * @param {boolean} [options.stroke=true] - Whether or not the rectangle is outlined
    * @param {boolean} [options.filled=true] - Whether or not the rectangle is filled
+   * @example
+   * shapeInstance.generateRectangles({
+   *  n: 200,
+   *  colours: shapeInstance.colours.rariSeatOrange,
+   *  maxWidth: 150,
+   *  minWidth: 50,
+   *  maxHeight: 425,
+   *  minHeight: 100
+   * })
    */
   generateRectangles(options) {
     this._createRandomRectangles(options, true);
@@ -411,6 +480,13 @@
    * @param {number} [options.speed=this.AMP_SPEED] - The rate at which the rectangles compress
    * @param {boolean} [options.stroke=true] - Whether or not the rectangle is outlined
    * @param {number} [options.range=this.RANGE] - The mouse's influence on the rectangles
+   * @example
+   * shapeInstance.generateAmplifyingRectangles({
+   *  n: 25,
+   *  colours: shapeInstance.colours.rariSeatOrange,
+   *  minHeight: 150,
+   *  maxHeight: 350
+   * })
    */
   generateAmplifyingRectangles(options) {
     const { range } = options;
@@ -477,6 +553,8 @@
    * @param {Object} options 
    * @param {integer} [options.maxIterations=64] - The level of detail
    * @param {number} [options.hue=0] - The hue colour value
+   * @example
+   * shapeInstance.generateJuliaFractals()
    */
   generateJuliaFractals(options = {}) {
     const { maxIterations, hue } = options;
@@ -580,6 +658,10 @@
    * @param {integer} [options.zoomFactor=150] - How much to zoom in by
    * @param {integer} [options.maxIterations=150] - The level of detail
    * @param {number} [options.hue=0] - The hue colour value
+   * @example
+   * shapeInstance.generateMandelbrotSetFractals({
+   *  maxIterations: 500
+   * })
    */
   generateMandelbrotSetFractals(options) {
     const { zoomFactor, maxIterations, hue } = options;
@@ -700,7 +782,9 @@ class _Shape {
   outline() { }
 }
 
-
+/**
+ * Class representing a circle.
+ */
 class Circle extends _Shape {
 
   /**
@@ -913,7 +997,9 @@ class Circle extends _Shape {
 
 }
 
-
+/**
+ * Class representing a rectangle.
+ */
 class Rectangle extends _Shape {
 
   /**
@@ -976,13 +1062,13 @@ class Rectangle extends _Shape {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Circle.html">Circle</a></li><li><a href="Rectangle.html">Rectangle</a></li><li><a href="Shape.html">Shape</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Circle.html">Circle</a></li><li><a href="Rectangle.html">Rectangle</a></li><li><a href="Shape.html">Shape</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-starting-guide.html">Getting started</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Fri Aug 21 2020 00:46:19 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Fri Aug 21 2020 14:11:00 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

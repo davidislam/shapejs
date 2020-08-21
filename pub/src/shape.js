@@ -6,6 +6,8 @@ class Shape {
    * Constructs a new instance of this library 
    * @param {string} canvasID - The id of the canvas
    * @returns {Object} - A shape object
+   * @example 
+   * const shapeInstance = new Shape('canvas');
    */
   constructor(canvasID) {
     this.canvas = document.querySelector(`#${canvasID}`);
@@ -70,6 +72,12 @@ class Shape {
    * @param {number} [options.height=100] - The height
    * @param {boolean} [options.stroke=true] - Whether or not the rectangle is outlined
    * @param {boolean} [options.filled=true] - Whether or not the rectangle is filled
+   * @example 
+   * shapeInstance.makeRectangle({
+   *  colour: 'blue',
+   *  x: 100,
+   *  y: 100
+   * }).draw()
    * @returns {Rectangle} - A rectangle object
    */
   makeRectangle(options) {
@@ -87,6 +95,13 @@ class Shape {
    * @param {number} [options.y=0] - The y coordinate of the circle's centre
    * @param {boolean} [options.stroke=true] - Whether or not the circle is outlined
    * @param {boolean} [options.filled=true] - Whether or not the circle is filled
+   * @example
+   * shapeInstance.makeCircle({
+   *  colour: 'blue',
+   *  radius: 100,
+   *  x: 250,
+   *  y: 250
+   * }).draw()
    * @return {Circle} - A circle object
    */
   makeCircle(options) {
@@ -113,6 +128,11 @@ class Shape {
    * @param {number} [options.maxRadius=100] - The maximum radius
    * @param {boolean} [options.filled=true] - Whether or not the circles are filled
    * @param {string[]} options.colours - The colours the circles take on
+   * @example 
+   * shapeInstance.generateCircles({
+   *  n: 200,
+   *  colours: shapeInstance.colours.fogUnderWhiteSky
+   * })
    */
   generateCircles(options) {
     this._createRandomCircles(options, true);
@@ -191,10 +211,21 @@ class Shape {
    * @param {number} [options.friction=0.95] - Friction
    * @param {number} [options.dx=2] - Velocity in the x direction
    * @param {number} [options.dy=10] - Velocity in the y direction
+   * @example
+   *   shapeInstance.generateBouncingCircles({
+   *    n: 100,
+   *    minRadius: 10,
+   *    maxRadius: 20,
+   *    colours: shapeInstance.colours.colors02
+   *   })
    */
   generateBouncingCircles(options) {
     this._createRandomCircles2(options);
-    this.canvas.addEventListener('click', () => this._createRandomCircles2(options))
+    this.canvas.addEventListener('click', () => {
+      this.circles = [];
+      this.clearCanvas();
+      this._createRandomCircles2(options)
+    })
     this.animateCircles();
   }
 
@@ -209,6 +240,14 @@ class Shape {
    * @param {number} [options.minRadius=5] - The minimum radius
    * @param {number} [options.maxRadius=100] - The maximum radius
    * @param {number} [options.speed=1] - The rate of motion
+   * @example
+   * shapeInstance.generateAnimatedCircles({
+   *  n: 250,
+   *  colours: shapeInstance.colours.colorThemesky,
+   *  speed: 0.2,
+   *  maxRadius: 100,
+   *  minRadius: 25
+   * })
    */
   generateAnimatedCircles(options) {
     this._createRandomCircles(options, false, true);
@@ -230,6 +269,14 @@ class Shape {
    * @param {number} [options.shrinkRate=3] - The rate of shrinking
    * @param {number} [options.growRate=3] - The rate of growth
    * @param {range} [options.range=50] - The mouse's range on the circles
+   * @example
+   * shapeInstance.generateInteractiveCircles({
+   *  n: 250,
+   *  colours: shapeInstance.colours.colorThemesky,
+   *  animated: true,
+   *  speed: 0.2,
+   *  range: 100
+   *  })
    */
   generateInteractiveCircles(options) {
     const { animated, range } = options;
@@ -248,6 +295,14 @@ class Shape {
    * @param {number} options.radius 
    * @param {number} [options.speed=1] - The rate of motion
    * @param {range} [options.range=50] - The mouse's range on the circles
+   * @example
+   * shapeInstance.generateCollidingCircles({
+   *  n: 100,
+   *  radius: 10,
+   *  colours: shapeInstance.colours.colourful,
+   *  speed: 3,
+   *  range: 120
+   *  })
    */
   generateCollidingCircles(options) {
     this.circles = [];
@@ -295,6 +350,12 @@ class Shape {
    * @param {number} [options.shrinkRate=3] - The rate of shrinking
    * @param {number} [options.growRate=3] - The rate of growth
    * @param {range} [options.range=50] - The mouse's range on the circles
+   * @example
+   * shapeInstance.generateFollowingCircles({
+   *  n: 1000,
+   *  maxRadius: 50,
+   *  colours: shapeInstance.colours.fogUnderWhiteSky
+   * })
    */
   generateFollowingCircles(options) {
     this.circles = [];
@@ -328,6 +389,15 @@ class Shape {
    * @param {number} [options.maxHeight=this.MAX_HEIGHT]
    * @param {boolean} [options.stroke=true] - Whether or not the rectangle is outlined
    * @param {boolean} [options.filled=true] - Whether or not the rectangle is filled
+   * @example
+   * shapeInstance.generateRectangles({
+   *  n: 200,
+   *  colours: shapeInstance.colours.rariSeatOrange,
+   *  maxWidth: 150,
+   *  minWidth: 50,
+   *  maxHeight: 425,
+   *  minHeight: 100
+   * })
    */
   generateRectangles(options) {
     this._createRandomRectangles(options, true);
@@ -386,6 +456,13 @@ class Shape {
    * @param {number} [options.speed=this.AMP_SPEED] - The rate at which the rectangles compress
    * @param {boolean} [options.stroke=true] - Whether or not the rectangle is outlined
    * @param {number} [options.range=this.RANGE] - The mouse's influence on the rectangles
+   * @example
+   * shapeInstance.generateAmplifyingRectangles({
+   *  n: 25,
+   *  colours: shapeInstance.colours.rariSeatOrange,
+   *  minHeight: 150,
+   *  maxHeight: 350
+   * })
    */
   generateAmplifyingRectangles(options) {
     const { range } = options;
@@ -452,6 +529,8 @@ class Shape {
    * @param {Object} options 
    * @param {integer} [options.maxIterations=64] - The level of detail
    * @param {number} [options.hue=0] - The hue colour value
+   * @example
+   * shapeInstance.generateJuliaFractals()
    */
   generateJuliaFractals(options = {}) {
     const { maxIterations, hue } = options;
@@ -555,6 +634,10 @@ class Shape {
    * @param {integer} [options.zoomFactor=150] - How much to zoom in by
    * @param {integer} [options.maxIterations=150] - The level of detail
    * @param {number} [options.hue=0] - The hue colour value
+   * @example
+   * shapeInstance.generateMandelbrotSetFractals({
+   *  maxIterations: 500
+   * })
    */
   generateMandelbrotSetFractals(options) {
     const { zoomFactor, maxIterations, hue } = options;

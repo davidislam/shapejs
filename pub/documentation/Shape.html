@@ -30,6 +30,8 @@
     
         <h2><span class="attribs"><span class="type-signature"></span></span>Shape<span class="signature">(canvasID)</span><span class="type-signature"> &rarr; {Object}</span></h2>
         
+            <div class="class-description"><p>Class representing this library</p></div>
+        
     
 </header>
 
@@ -38,6 +40,8 @@
     
         
 
+    
+    <h2>Constructor</h2>
     
 
     
@@ -49,7 +53,7 @@
 
 
 <div class="description">
-    Constructs a new instance of this library
+    <p>Constructs a new instance of this library</p>
 </div>
 
 
@@ -101,7 +105,7 @@
 
             
 
-            <td class="description last">The id of the canvas</td>
+            <td class="description last"><p>The id of the canvas</p></td>
         </tr>
 
     
@@ -142,7 +146,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line7">line 7</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -171,7 +175,9 @@
 
         
 <div class="param-desc">
-    - A shape object
+    <ul>
+<li>A shape object</li>
+</ul>
 </div>
 
 
@@ -191,6 +197,11 @@
     
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const shapeInstance = new Shape('canvas');</code></pre>
 
 
 
@@ -228,7 +239,7 @@
 
 
 <div class="description">
-    Animates all circles in the circles array by calling their update method
+    <p>Animates all circles in the circles array by calling their update method</p>
 </div>
 
 
@@ -272,7 +283,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line426">line 426</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line502">line 502</a>
     </li></ul></dd>
     
 
@@ -316,7 +327,7 @@
 
 
 <div class="description">
-    Animates the rectangles in the rectangles array by calling their update method
+    <p>Animates the rectangles in the rectangles array by calling their update method</p>
 </div>
 
 
@@ -360,7 +371,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line441">line 441</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line517">line 517</a>
     </li></ul></dd>
     
 
@@ -404,7 +415,7 @@
 
 
 <div class="description">
-    Clears the canvas
+    <p>Clears the canvas</p>
 </div>
 
 
@@ -448,7 +459,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line418">line 418</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line494">line 494</a>
     </li></ul></dd>
     
 
@@ -492,7 +503,7 @@
 
 
 <div class="description">
-    Fits canvas to the screen
+    <p>Fits canvas to the screen</p>
 </div>
 
 
@@ -536,7 +547,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line98">line 98</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -580,7 +591,7 @@
 
 
 <div class="description">
-    Generates amplifying rectangles
+    <p>Generates amplifying rectangles</p>
 </div>
 
 
@@ -690,7 +701,7 @@
                 </td>
             
 
-            <td class="description last">The number of rectangles to generate</td>
+            <td class="description last"><p>The number of rectangles to generate</p></td>
         </tr>
 
     
@@ -846,7 +857,7 @@
                 </td>
             
 
-            <td class="description last">The compression height</td>
+            <td class="description last"><p>The compression height</p></td>
         </tr>
 
     
@@ -885,7 +896,7 @@
                 </td>
             
 
-            <td class="description last">The rate at which the rectangles compress</td>
+            <td class="description last"><p>The rate at which the rectangles compress</p></td>
         </tr>
 
     
@@ -924,7 +935,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the rectangle is outlined</td>
+            <td class="description last"><p>Whether or not the rectangle is outlined</p></td>
         </tr>
 
     
@@ -963,7 +974,7 @@
                 </td>
             
 
-            <td class="description last">The mouse's influence on the rectangles</td>
+            <td class="description last"><p>The mouse's influence on the rectangles</p></td>
         </tr>
 
     
@@ -1011,7 +1022,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line387">line 387</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line463">line 463</a>
     </li></ul></dd>
     
 
@@ -1040,6 +1051,16 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.generateAmplifyingRectangles({
+ n: 25,
+ colours: shapeInstance.colours.rariSeatOrange,
+ minHeight: 150,
+ maxHeight: 350
+})</code></pre>
+
+
 
         
             
@@ -1055,7 +1076,7 @@
 
 
 <div class="description">
-    Generates animated circles
+    <p>Generates animated circles</p>
 </div>
 
 
@@ -1165,7 +1186,7 @@
                 </td>
             
 
-            <td class="description last">The number of circles</td>
+            <td class="description last"><p>The number of circles</p></td>
         </tr>
 
     
@@ -1200,7 +1221,7 @@
                 </td>
             
 
-            <td class="description last">The colours</td>
+            <td class="description last"><p>The colours</p></td>
         </tr>
 
     
@@ -1239,7 +1260,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circle is outlined</td>
+            <td class="description last"><p>Whether or not the circle is outlined</p></td>
         </tr>
 
     
@@ -1278,7 +1299,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circle is filled</td>
+            <td class="description last"><p>Whether or not the circle is filled</p></td>
         </tr>
 
     
@@ -1317,7 +1338,7 @@
                 </td>
             
 
-            <td class="description last">The minimum radius</td>
+            <td class="description last"><p>The minimum radius</p></td>
         </tr>
 
     
@@ -1356,7 +1377,7 @@
                 </td>
             
 
-            <td class="description last">The maximum radius</td>
+            <td class="description last"><p>The maximum radius</p></td>
         </tr>
 
     
@@ -1395,7 +1416,7 @@
                 </td>
             
 
-            <td class="description last">The rate of motion</td>
+            <td class="description last"><p>The rate of motion</p></td>
         </tr>
 
     
@@ -1443,7 +1464,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line210">line 210</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line248">line 248</a>
     </li></ul></dd>
     
 
@@ -1472,6 +1493,17 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.generateAnimatedCircles({
+ n: 250,
+ colours: shapeInstance.colours.colorThemesky,
+ speed: 0.2,
+ maxRadius: 100,
+ minRadius: 25
+})</code></pre>
+
+
 
         
             
@@ -1487,7 +1519,7 @@
 
 
 <div class="description">
-    Generates bouncing circles
+    <p>Generates bouncing circles</p>
 </div>
 
 
@@ -1597,7 +1629,7 @@
                 </td>
             
 
-            <td class="description last">The number of circles</td>
+            <td class="description last"><p>The number of circles</p></td>
         </tr>
 
     
@@ -1632,7 +1664,7 @@
                 </td>
             
 
-            <td class="description last">The colours</td>
+            <td class="description last"><p>The colours</p></td>
         </tr>
 
     
@@ -1671,7 +1703,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circle is outlined</td>
+            <td class="description last"><p>Whether or not the circle is outlined</p></td>
         </tr>
 
     
@@ -1710,7 +1742,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circle is filled</td>
+            <td class="description last"><p>Whether or not the circle is filled</p></td>
         </tr>
 
     
@@ -1749,7 +1781,7 @@
                 </td>
             
 
-            <td class="description last">The minimum radius</td>
+            <td class="description last"><p>The minimum radius</p></td>
         </tr>
 
     
@@ -1788,7 +1820,7 @@
                 </td>
             
 
-            <td class="description last">The maximum radius</td>
+            <td class="description last"><p>The maximum radius</p></td>
         </tr>
 
     
@@ -1827,7 +1859,7 @@
                 </td>
             
 
-            <td class="description last">The rate of acceleration</td>
+            <td class="description last"><p>The rate of acceleration</p></td>
         </tr>
 
     
@@ -1866,7 +1898,7 @@
                 </td>
             
 
-            <td class="description last">Friction</td>
+            <td class="description last"><p>Friction</p></td>
         </tr>
 
     
@@ -1905,7 +1937,7 @@
                 </td>
             
 
-            <td class="description last">Velocity in the x direction</td>
+            <td class="description last"><p>Velocity in the x direction</p></td>
         </tr>
 
     
@@ -1944,7 +1976,7 @@
                 </td>
             
 
-            <td class="description last">Velocity in the y direction</td>
+            <td class="description last"><p>Velocity in the y direction</p></td>
         </tr>
 
     
@@ -1992,7 +2024,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line192">line 192</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line222">line 222</a>
     </li></ul></dd>
     
 
@@ -2021,6 +2053,16 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.generateBouncingCircles({
+   n: 100,
+   minRadius: 10,
+   maxRadius: 20,
+   colours: shapeInstance.colours.colors02
+  })</code></pre>
+
+
 
         
             
@@ -2036,7 +2078,7 @@
 
 
 <div class="description">
-    Generates random static circles
+    <p>Generates random static circles</p>
 </div>
 
 
@@ -2088,7 +2130,7 @@
 
             
 
-            <td class="description last">An object describing the properties of the circles
+            <td class="description last"><p>An object describing the properties of the circles</p>
                 <h6>Properties</h6>
                 
 
@@ -2146,7 +2188,7 @@
                 </td>
             
 
-            <td class="description last">The number of circles</td>
+            <td class="description last"><p>The number of circles</p></td>
         </tr>
 
     
@@ -2185,7 +2227,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circles are outlined</td>
+            <td class="description last"><p>Whether or not the circles are outlined</p></td>
         </tr>
 
     
@@ -2224,7 +2266,7 @@
                 </td>
             
 
-            <td class="description last">The minimum radius</td>
+            <td class="description last"><p>The minimum radius</p></td>
         </tr>
 
     
@@ -2263,7 +2305,7 @@
                 </td>
             
 
-            <td class="description last">The maximum radius</td>
+            <td class="description last"><p>The maximum radius</p></td>
         </tr>
 
     
@@ -2302,7 +2344,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circles are filled</td>
+            <td class="description last"><p>Whether or not the circles are filled</p></td>
         </tr>
 
     
@@ -2337,7 +2379,7 @@
                 </td>
             
 
-            <td class="description last">The colours the circles take on</td>
+            <td class="description last"><p>The colours the circles take on</p></td>
         </tr>
 
     
@@ -2385,7 +2427,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line114">line 114</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line137">line 137</a>
     </li></ul></dd>
     
 
@@ -2414,6 +2456,14 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.generateCircles({
+ n: 200,
+ colours: shapeInstance.colours.fogUnderWhiteSky
+})</code></pre>
+
+
 
         
             
@@ -2429,7 +2479,7 @@
 
 
 <div class="description">
-    Generates colliding particles with mouse interactivity
+    <p>Generates colliding particles with mouse interactivity</p>
 </div>
 
 
@@ -2539,7 +2589,7 @@
                 </td>
             
 
-            <td class="description last">The number of circles</td>
+            <td class="description last"><p>The number of circles</p></td>
         </tr>
 
     
@@ -2574,7 +2624,7 @@
                 </td>
             
 
-            <td class="description last">The colours</td>
+            <td class="description last"><p>The colours</p></td>
         </tr>
 
     
@@ -2648,7 +2698,7 @@
                 </td>
             
 
-            <td class="description last">The rate of motion</td>
+            <td class="description last"><p>The rate of motion</p></td>
         </tr>
 
     
@@ -2687,7 +2737,7 @@
                 </td>
             
 
-            <td class="description last">The mouse's range on the circles</td>
+            <td class="description last"><p>The mouse's range on the circles</p></td>
         </tr>
 
     
@@ -2735,7 +2785,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line249">line 249</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line303">line 303</a>
     </li></ul></dd>
     
 
@@ -2764,6 +2814,17 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.generateCollidingCircles({
+ n: 100,
+ radius: 10,
+ colours: shapeInstance.colours.colourful,
+ speed: 3,
+ range: 120
+ })</code></pre>
+
+
 
         
             
@@ -2779,7 +2840,7 @@
 
 
 <div class="description">
-    Generates decaying particles that follow the mouse cursor around
+    <p>Generates decaying particles that follow the mouse cursor around</p>
 </div>
 
 
@@ -2889,7 +2950,7 @@
                 </td>
             
 
-            <td class="description last">The number of circles</td>
+            <td class="description last"><p>The number of circles</p></td>
         </tr>
 
     
@@ -2924,7 +2985,7 @@
                 </td>
             
 
-            <td class="description last">The colours</td>
+            <td class="description last"><p>The colours</p></td>
         </tr>
 
     
@@ -2963,7 +3024,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circle is outlined</td>
+            <td class="description last"><p>Whether or not the circle is outlined</p></td>
         </tr>
 
     
@@ -3002,7 +3063,7 @@
                 </td>
             
 
-            <td class="description last">The maximum radius</td>
+            <td class="description last"><p>The maximum radius</p></td>
         </tr>
 
     
@@ -3041,7 +3102,7 @@
                 </td>
             
 
-            <td class="description last">The rate of shrinking</td>
+            <td class="description last"><p>The rate of shrinking</p></td>
         </tr>
 
     
@@ -3080,7 +3141,7 @@
                 </td>
             
 
-            <td class="description last">The rate of growth</td>
+            <td class="description last"><p>The rate of growth</p></td>
         </tr>
 
     
@@ -3119,7 +3180,7 @@
                 </td>
             
 
-            <td class="description last">The mouse's range on the circles</td>
+            <td class="description last"><p>The mouse's range on the circles</p></td>
         </tr>
 
     
@@ -3167,7 +3228,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line296">line 296</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line356">line 356</a>
     </li></ul></dd>
     
 
@@ -3196,6 +3257,15 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.generateFollowingCircles({
+ n: 1000,
+ maxRadius: 50,
+ colours: shapeInstance.colours.fogUnderWhiteSky
+})</code></pre>
+
+
 
         
             
@@ -3211,7 +3281,7 @@
 
 
 <div class="description">
-    Generates static or animated circles with interactivity
+    <p>Generates static or animated circles with interactivity</p>
 </div>
 
 
@@ -3321,7 +3391,7 @@
                 </td>
             
 
-            <td class="description last">The number of circles</td>
+            <td class="description last"><p>The number of circles</p></td>
         </tr>
 
     
@@ -3356,7 +3426,7 @@
                 </td>
             
 
-            <td class="description last">The colours</td>
+            <td class="description last"><p>The colours</p></td>
         </tr>
 
     
@@ -3395,7 +3465,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circle is outlined</td>
+            <td class="description last"><p>Whether or not the circle is outlined</p></td>
         </tr>
 
     
@@ -3434,7 +3504,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circle is filled</td>
+            <td class="description last"><p>Whether or not the circle is filled</p></td>
         </tr>
 
     
@@ -3473,7 +3543,7 @@
                 </td>
             
 
-            <td class="description last">The minimum radius</td>
+            <td class="description last"><p>The minimum radius</p></td>
         </tr>
 
     
@@ -3512,7 +3582,7 @@
                 </td>
             
 
-            <td class="description last">The maximum radius</td>
+            <td class="description last"><p>The maximum radius</p></td>
         </tr>
 
     
@@ -3551,7 +3621,7 @@
                 </td>
             
 
-            <td class="description last">The rate of motion</td>
+            <td class="description last"><p>The rate of motion</p></td>
         </tr>
 
     
@@ -3625,7 +3695,7 @@
                 </td>
             
 
-            <td class="description last">How small will the circles get upon being hovered on</td>
+            <td class="description last"><p>How small will the circles get upon being hovered on</p></td>
         </tr>
 
     
@@ -3664,7 +3734,7 @@
                 </td>
             
 
-            <td class="description last">The rate of shrinking</td>
+            <td class="description last"><p>The rate of shrinking</p></td>
         </tr>
 
     
@@ -3703,7 +3773,7 @@
                 </td>
             
 
-            <td class="description last">The rate of growth</td>
+            <td class="description last"><p>The rate of growth</p></td>
         </tr>
 
     
@@ -3742,7 +3812,7 @@
                 </td>
             
 
-            <td class="description last">The mouse's range on the circles</td>
+            <td class="description last"><p>The mouse's range on the circles</p></td>
         </tr>
 
     
@@ -3790,7 +3860,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line231">line 231</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line277">line 277</a>
     </li></ul></dd>
     
 
@@ -3819,6 +3889,17 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.generateInteractiveCircles({
+ n: 250,
+ colours: shapeInstance.colours.colorThemesky,
+ animated: true,
+ speed: 0.2,
+ range: 100
+ })</code></pre>
+
+
 
         
             
@@ -3834,7 +3915,7 @@
 
 
 <div class="description">
-    Generate Julia fractals
+    <p>Generate Julia fractals</p>
 </div>
 
 
@@ -3948,7 +4029,7 @@
                 </td>
             
 
-            <td class="description last">The level of detail</td>
+            <td class="description last"><p>The level of detail</p></td>
         </tr>
 
     
@@ -3987,7 +4068,7 @@
                 </td>
             
 
-            <td class="description last">The hue colour value</td>
+            <td class="description last"><p>The hue colour value</p></td>
         </tr>
 
     
@@ -4035,7 +4116,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line453">line 453</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line531">line 531</a>
     </li></ul></dd>
     
 
@@ -4064,6 +4145,11 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.generateJuliaFractals()</code></pre>
+
+
 
         
             
@@ -4079,7 +4165,7 @@
 
 
 <div class="description">
-    Generate Mandelbrotset fractals
+    <p>Generate Mandelbrotset fractals</p>
 </div>
 
 
@@ -4193,7 +4279,7 @@
                 </td>
             
 
-            <td class="description last">How much to zoom in by</td>
+            <td class="description last"><p>How much to zoom in by</p></td>
         </tr>
 
     
@@ -4232,7 +4318,7 @@
                 </td>
             
 
-            <td class="description last">The level of detail</td>
+            <td class="description last"><p>The level of detail</p></td>
         </tr>
 
     
@@ -4271,7 +4357,7 @@
                 </td>
             
 
-            <td class="description last">The hue colour value</td>
+            <td class="description last"><p>The hue colour value</p></td>
         </tr>
 
     
@@ -4319,7 +4405,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line556">line 556</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line638">line 638</a>
     </li></ul></dd>
     
 
@@ -4348,6 +4434,13 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.generateMandelbrotSetFractals({
+ maxIterations: 500
+})</code></pre>
+
+
 
         
             
@@ -4363,7 +4456,7 @@
 
 
 <div class="description">
-    Generates static rectangles
+    <p>Generates static rectangles</p>
 </div>
 
 
@@ -4473,7 +4566,7 @@
                 </td>
             
 
-            <td class="description last">The number of rectangles to generate</td>
+            <td class="description last"><p>The number of rectangles to generate</p></td>
         </tr>
 
     
@@ -4707,7 +4800,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the rectangle is outlined</td>
+            <td class="description last"><p>Whether or not the rectangle is outlined</p></td>
         </tr>
 
     
@@ -4746,7 +4839,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the rectangle is filled</td>
+            <td class="description last"><p>Whether or not the rectangle is filled</p></td>
         </tr>
 
     
@@ -4794,7 +4887,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line329">line 329</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line398">line 398</a>
     </li></ul></dd>
     
 
@@ -4823,6 +4916,18 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.generateRectangles({
+ n: 200,
+ colours: shapeInstance.colours.rariSeatOrange,
+ maxWidth: 150,
+ minWidth: 50,
+ maxHeight: 425,
+ minHeight: 100
+})</code></pre>
+
+
 
         
             
@@ -4838,7 +4943,7 @@
 
 
 <div class="description">
-    Construct a circle object and add it to the circles array
+    <p>Construct a circle object and add it to the circles array</p>
 </div>
 
 
@@ -4890,7 +4995,7 @@
 
             
 
-            <td class="description last">The properties of this circle
+            <td class="description last"><p>The properties of this circle</p>
                 <h6>Properties</h6>
                 
 
@@ -4952,7 +5057,7 @@
                 </td>
             
 
-            <td class="description last">The radius</td>
+            <td class="description last"><p>The radius</p></td>
         </tr>
 
     
@@ -4991,7 +5096,7 @@
                 </td>
             
 
-            <td class="description last">The colour</td>
+            <td class="description last"><p>The colour</p></td>
         </tr>
 
     
@@ -5030,7 +5135,7 @@
                 </td>
             
 
-            <td class="description last">The x coordinate of the circle's centre</td>
+            <td class="description last"><p>The x coordinate of the circle's centre</p></td>
         </tr>
 
     
@@ -5069,7 +5174,7 @@
                 </td>
             
 
-            <td class="description last">The y coordinate of the circle's centre</td>
+            <td class="description last"><p>The y coordinate of the circle's centre</p></td>
         </tr>
 
     
@@ -5108,7 +5213,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circle is outlined</td>
+            <td class="description last"><p>Whether or not the circle is outlined</p></td>
         </tr>
 
     
@@ -5147,7 +5252,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the circle is filled</td>
+            <td class="description last"><p>Whether or not the circle is filled</p></td>
         </tr>
 
     
@@ -5195,7 +5300,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line89">line 89</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line107">line 107</a>
     </li></ul></dd>
     
 
@@ -5224,7 +5329,9 @@
 
         
 <div class="param-desc">
-    - A circle object
+    <ul>
+<li>A circle object</li>
+</ul>
 </div>
 
 
@@ -5246,6 +5353,16 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.makeCircle({
+ colour: 'blue',
+ radius: 100,
+ x: 250,
+ y: 250
+}).draw()</code></pre>
+
+
 
         
             
@@ -5261,7 +5378,7 @@
 
 
 <div class="description">
-    Construct a rectangle object and add it to the rectangles array
+    <p>Construct a rectangle object and add it to the rectangles array</p>
 </div>
 
 
@@ -5313,7 +5430,7 @@
 
             
 
-            <td class="description last">The properties of this rectangle
+            <td class="description last"><p>The properties of this rectangle</p>
                 <h6>Properties</h6>
                 
 
@@ -5375,7 +5492,7 @@
                 </td>
             
 
-            <td class="description last">The colour</td>
+            <td class="description last"><p>The colour</p></td>
         </tr>
 
     
@@ -5414,7 +5531,7 @@
                 </td>
             
 
-            <td class="description last">The x coordinate of the top-left corner</td>
+            <td class="description last"><p>The x coordinate of the top-left corner</p></td>
         </tr>
 
     
@@ -5453,7 +5570,7 @@
                 </td>
             
 
-            <td class="description last">The y coordinate of the top-left corner</td>
+            <td class="description last"><p>The y coordinate of the top-left corner</p></td>
         </tr>
 
     
@@ -5492,7 +5609,7 @@
                 </td>
             
 
-            <td class="description last">The width</td>
+            <td class="description last"><p>The width</p></td>
         </tr>
 
     
@@ -5531,7 +5648,7 @@
                 </td>
             
 
-            <td class="description last">The height</td>
+            <td class="description last"><p>The height</p></td>
         </tr>
 
     
@@ -5570,7 +5687,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the rectangle is outlined</td>
+            <td class="description last"><p>Whether or not the rectangle is outlined</p></td>
         </tr>
 
     
@@ -5609,7 +5726,7 @@
                 </td>
             
 
-            <td class="description last">Whether or not the rectangle is filled</td>
+            <td class="description last"><p>Whether or not the rectangle is filled</p></td>
         </tr>
 
     
@@ -5657,7 +5774,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Shape.js.html">Shape.js</a>, <a href="Shape.js.html#line72">line 72</a>
+        <a href="shape.js.html">shape.js</a>, <a href="shape.js.html#line83">line 83</a>
     </li></ul></dd>
     
 
@@ -5686,7 +5803,9 @@
 
         
 <div class="param-desc">
-    - A rectangle object
+    <ul>
+<li>A rectangle object</li>
+</ul>
 </div>
 
 
@@ -5708,6 +5827,15 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>shapeInstance.makeRectangle({
+ colour: 'blue',
+ x: 100,
+ y: 100
+}).draw()</code></pre>
+
+
 
         
     
@@ -5725,13 +5853,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Circle.html">Circle</a></li><li><a href="Rectangle.html">Rectangle</a></li><li><a href="Shape.html">Shape</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Circle.html">Circle</a></li><li><a href="Rectangle.html">Rectangle</a></li><li><a href="Shape.html">Shape</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-starting-guide.html">Getting started</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Fri Aug 21 2020 00:46:19 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Fri Aug 21 2020 14:11:00 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

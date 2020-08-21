@@ -6,13 +6,14 @@ body {
 }
 
 canvas {
-  outline: white 3px solid;
+  outline: white 10px solid;
+  margin-top: 15px;
 }
 
 .code {
   margin-left: 320px;
   margin-right: 320px;
-  outline: white 3px solid;
+  outline: white 10px solid;
 }
 
 .example {
