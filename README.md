@@ -18,7 +18,7 @@ Set up your HTML markup.
 <canvas id="canvas"></canvas>
 ```
 
-Add [shape.js](https://github.com/csc309-summer-2020/js-library-islamdav/tree/master/pub/js) just before your closing `<body>` tag, after [mathjs](https://mathjs.org/).
+Add [Shape.js](https://github.com/csc309-summer-2020/js-library-islamdav/tree/master/pub/js) just before your closing `<body>` tag, after [mathjs](https://mathjs.org/).
 
 ```html
 <script
@@ -26,7 +26,7 @@ Add [shape.js](https://github.com/csc309-summer-2020/js-library-islamdav/tree/ma
   integrity="sha512-rCvDXOM8HOkDDjC0l9vQPhUg2n0rKlcsCtDjWG0ajYmVfjgtO6egt/RdSbKSzFCIUaE/OQRwmiU/4PmOeK3J+Q=="
   crossorigin="anonymous"
 ></script>
-<script type="text/javascript" src="./shape.js"></script>
+<script type="text/javascript" src="./Shape.js"></script>
 ```
 
 Initialize a shape instance in your script file or an inline script tag, optionally making it full screen.
@@ -61,7 +61,7 @@ When complete, your HTML should look something like:
       integrity="sha512-rCvDXOM8HOkDDjC0l9vQPhUg2n0rKlcsCtDjWG0ajYmVfjgtO6egt/RdSbKSzFCIUaE/OQRwmiU/4PmOeK3J+Q=="
       crossorigin="anonymous"
     ></script>
-    <script type="text/javascript" src="./shape.js"></script>
+    <script type="text/javascript" src="./Shape.js"></script>
 
     <script>
       const shapeInstance = new Shape("canvas");
