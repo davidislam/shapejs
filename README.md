@@ -1,6 +1,6 @@
 # Landing Page
 
-My landing page
+[My landing page](https://ancient-castle-97858.herokuapp.com/)
 
 # Getting Started
 
@@ -78,4 +78,4 @@ When complete, your HTML should look something like:
 
 # Documentation
 
-My documentation
+[My documentation](https://ancient-castle-97858.herokuapp.com/documentation/)
