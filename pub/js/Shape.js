@@ -169,7 +169,16 @@
       this._rect = this.canvas.getBoundingClientRect(); // Update
     }
 
-    /* Generates random static circles given the properties in <options> */
+    /**
+     * Generates random static circles
+     * @param {Object} options - An object describing the properties of the circles
+     * @param {integer} options.n - The number of circles
+     * @param {boolean} [options.stroke=true] - Whether or not the circles are outlined
+     * @param {number} [options.minRadius=5] - The minimum radius
+     * @param {number} [options.maxRadius=100] - The maximum radius
+     * @param {boolean} [options.filled=true] - Whether or not the circles are filled
+     * @param {string[]} options.colours - The colours the circles take on
+     */
     generateCircles(options) {
       this._createRandomCircles(options, true);
       this.canvas.addEventListener('click', () => {

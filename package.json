@@ -19,5 +19,8 @@
   "homepage": "https://github.com/csc309-summer-2020/js-library-islamdav#readme",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.5"
   }
 }
